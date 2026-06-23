@@ -103,6 +103,14 @@ export default function ChapterPage() {
     return () => clearTimeout(timer);
   }, [content]);
 
+  // #27 Image optimization: lazy loading
+  useEffect(() => {
+    document.querySelectorAll('.chapter-content img').forEach(img => {
+      img.setAttribute('loading', 'lazy');
+      img.setAttribute('decoding', 'async');
+    });
+  }, [content]);
+
   // Syntax highlighting with Prism
   useEffect(() => {
     if (!content) return;

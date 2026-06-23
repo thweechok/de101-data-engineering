@@ -107,17 +107,19 @@ export default function Sidebar({ isOpen, onClose }) {
           )}
         </nav>
 
-        <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', display: 'flex', gap: 6 }}>
-          <Link href="/roadmap" className="sidebar-quick-link" onClick={onClose} style={{
-            flex: 1, textAlign: 'center', padding: '8px 4px', fontSize: '0.72rem', fontWeight: 600,
-            background: 'var(--glass2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
-            color: 'var(--text-dim)', textDecoration: 'none', transition: 'all 0.2s'
-          }}>🎯 Roadmap</Link>
-          <Link href="/glossary" className="sidebar-quick-link" onClick={onClose} style={{
-            flex: 1, textAlign: 'center', padding: '8px 4px', fontSize: '0.72rem', fontWeight: 600,
-            background: 'var(--glass2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
-            color: 'var(--text-dim)', textDecoration: 'none', transition: 'all 0.2s'
-          }}>📖 Glossary</Link>
+        <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+          {[
+            { href: '/dashboard', emoji: '📊', label: 'Dashboard' },
+            { href: '/courses', emoji: '📚', label: 'Courses' },
+            { href: '/roadmap', emoji: '🎯', label: 'Roadmap' },
+            { href: '/glossary', emoji: '📖', label: 'Glossary' },
+          ].map(item => (
+            <Link key={item.href} href={item.href} onClick={onClose} style={{
+              textAlign: 'center', padding: '8px 4px', fontSize: '0.72rem', fontWeight: 600,
+              background: 'var(--glass2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
+              color: 'var(--text-dim)', textDecoration: 'none', transition: 'all 0.2s'
+            }}>{item.emoji} {item.label}</Link>
+          ))}
         </div>
       </aside>
     </>
