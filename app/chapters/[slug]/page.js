@@ -3,6 +3,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { chapters } from '@/data/chapters-index';
 import { getChapterContent } from '@/data/content-loader';
+import Quiz from '@/components/Quiz';
 import { useState, useEffect, useMemo } from 'react';
 
 export default function ChapterPage() {
@@ -180,6 +181,8 @@ export default function ChapterPage() {
       )}
 
       <div className="chapter-content" dangerouslySetInnerHTML={{ __html: content || '<p style="color:var(--text-muted);text-align:center;padding:40px">⏳ กำลังโหลดเนื้อหา...</p>' }} />
+
+      <Quiz chapterNumber={chapter.number} />
 
       <div style={{ textAlign: 'center', margin: '32px 0' }}>
         <button

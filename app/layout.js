@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import PageTransition from '@/components/PageTransition';
 import ReadingProgress from '@/components/ReadingProgress';
@@ -7,9 +7,23 @@ import './globals.css';
 
 export default function RootLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [theme, setTheme] = useState('dark');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('de101-theme') || 'dark';
+    setTheme(saved);
+    document.documentElement.setAttribute('data-theme', saved);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('de101-theme', next);
+    document.documentElement.setAttribute('data-theme', next);
+  };
 
   return (
-    <html lang="th">
+    <html lang="th" data-theme="dark">
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,8 +33,6 @@ export default function RootLayout({ children }) {
         <meta name="author" content="DE101 Thailand" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://de-course-seven.vercel.app" />
-
-        {/* Open Graph — Facebook, LINE, Discord */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://de-course-seven.vercel.app" />
         <meta property="og:title" content="DE101 — เริ่มต้น Data Engineering จากศูนย์ 🚀" />
@@ -30,14 +42,10 @@ export default function RootLayout({ children }) {
         <meta property="og:image:height" content="630" />
         <meta property="og:locale" content="th_TH" />
         <meta property="og:site_name" content="DE101 Thailand" />
-
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="DE101 — เริ่มต้น Data Engineering จากศูนย์ 🚀" />
         <meta name="twitter:description" content="คอร์สฟรี 16 บท สอน Data Engineering ภาษาไทย — Python, SQL, Airflow, dbt, BigQuery, Docker, Spark" />
         <meta name="twitter:image" content="https://de-course-seven.vercel.app/images/de_roadmap.png" />
-
-        {/* Theme */}
         <meta name="theme-color" content="#0a0f1c" />
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
       </head>
@@ -48,6 +56,9 @@ export default function RootLayout({ children }) {
             ☰
           </button>
           <span className="topbar-title">🎓 DE101</span>
+          <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'เปลี่ยนเป็น Light Mode' : 'เปลี่ยนเป็น Dark Mode'}>
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
         </div>
 
         <div className="app-layout">
