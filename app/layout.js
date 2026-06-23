@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
+import PageTransition from '@/components/PageTransition';
 import './globals.css';
 
 export default function RootLayout({ children }) {
@@ -50,7 +51,7 @@ export default function RootLayout({ children }) {
         <div className="app-layout">
           <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
           <main className="main-content">
-            {children}
+            <PageTransition>{children}</PageTransition>
           </main>
         </div>
       </body>

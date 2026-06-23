@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 export default function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
   const [completed, setCompleted] = useState([]);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     try {
@@ -24,6 +25,14 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const progress = chapters.length > 0 ? Math.round((completed.length / chapters.length) * 100) : 0;
 
+  const filteredChapters = search.trim()
+    ? chapters.filter(c =>
+        c.title.toLowerCase().includes(search.toLowerCase()) ||
+        c.shortTitle.toLowerCase().includes(search.toLowerCase()) ||
+        c.description?.toLowerCase().includes(search.toLowerCase())
+      )
+    : null;
+
   return (
     <>
       <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
@@ -38,26 +47,34 @@ export default function Sidebar({ isOpen, onClose }) {
             </div>
             <div className="progress-text">{progress}% สำเร็จ ({completed.length}/{chapters.length} บท)</div>
           </div>
+          <div className="sidebar-search">
+            <input
+              type="text"
+              placeholder="🔍 ค้นหาบทเรียน..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="search-input"
+            />
+          </div>
         </div>
 
         <nav className="sidebar-nav">
-          {phases.map(phase => (
-            <div className="phase-group" key={phase.num}>
+          {filteredChapters ? (
+            /* Search results */
+            <div className="phase-group">
               <div className="phase-label">
-                <span className="phase-dot" style={{ background: phase.color }} />
-                Phase {phase.num}: {phase.title}
+                <span className="phase-dot" style={{ background: 'var(--cyan)' }} />
+                ผลค้นหา ({filteredChapters.length})
               </div>
-              {chapters.filter(c => c.phase === phase.num).map(ch => {
+              {filteredChapters.length === 0 && (
+                <div style={{ padding: '12px 20px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>ไม่พบบทเรียน</div>
+              )}
+              {filteredChapters.map(ch => {
                 const href = `/chapters/${ch.slug}`;
                 const isActive = pathname === href;
                 const isDone = completed.includes(ch.number);
                 return (
-                  <Link
-                    key={ch.slug}
-                    href={href}
-                    className={`chapter-link ${isActive ? 'active' : ''} ${isDone ? 'completed' : ''}`}
-                    onClick={onClose}
-                  >
+                  <Link key={ch.slug} href={href} className={`chapter-link ${isActive ? 'active' : ''} ${isDone ? 'completed' : ''}`} onClick={() => { onClose(); setSearch(''); }}>
                     <span className="ch-emoji">{isDone ? '✅' : ch.emoji}</span>
                     <span className="ch-num">{ch.number}</span>
                     {ch.shortTitle}
@@ -65,7 +82,29 @@ export default function Sidebar({ isOpen, onClose }) {
                 );
               })}
             </div>
-          ))}
+          ) : (
+            /* Normal phase groups */
+            phases.map(phase => (
+              <div className="phase-group" key={phase.num}>
+                <div className="phase-label">
+                  <span className="phase-dot" style={{ background: phase.color }} />
+                  Phase {phase.num}: {phase.title}
+                </div>
+                {chapters.filter(c => c.phase === phase.num).map(ch => {
+                  const href = `/chapters/${ch.slug}`;
+                  const isActive = pathname === href;
+                  const isDone = completed.includes(ch.number);
+                  return (
+                    <Link key={ch.slug} href={href} className={`chapter-link ${isActive ? 'active' : ''} ${isDone ? 'completed' : ''}`} onClick={onClose}>
+                      <span className="ch-emoji">{isDone ? '✅' : ch.emoji}</span>
+                      <span className="ch-num">{ch.number}</span>
+                      {ch.shortTitle}
+                    </Link>
+                  );
+                })}
+              </div>
+            ))
+          )}
         </nav>
       </aside>
     </>
