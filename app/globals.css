@@ -197,6 +197,7 @@ body {
   flex: 1;
   margin-left: var(--sidebar-w);
   min-height: 100vh;
+  padding-top: 56px;
 }
 
 .content-wrapper {
@@ -207,7 +208,7 @@ body {
 
 /* ===== TOP BAR (mobile) ===== */
 .topbar {
-  display: none;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
@@ -230,7 +231,7 @@ body {
   color: var(--text);
   cursor: pointer;
   font-size: 1.2rem;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
 }
@@ -699,6 +700,9 @@ body {
     display: block;
   }
   .topbar {
+    display: flex;
+  }
+  .menu-btn {
     display: flex;
   }
   .main-content {
