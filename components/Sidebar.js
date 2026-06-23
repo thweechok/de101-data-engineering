@@ -2,19 +2,26 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { chapters } from '@/data/chapters-index';
+import { coursesList } from '@/data/courses-registry';
 import { useState, useEffect } from 'react';
 
 export default function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
   const [completed, setCompleted] = useState([]);
   const [search, setSearch] = useState('');
+  const [showCourses, setShowCourses] = useState(false);
+
+  // Detect which course we're in from URL
+  const courseMatch = pathname.match(/\/courses\/([^/]+)/);
+  const activeCourseId = courseMatch ? courseMatch[1] : null;
 
   useEffect(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem('de101-progress') || '[]');
+      const key = activeCourseId ? `${activeCourseId}-progress` : 'de101-progress';
+      const saved = JSON.parse(localStorage.getItem(key) || '[]');
       setCompleted(saved);
     } catch {}
-  }, []);
+  }, [activeCourseId]);
 
   const phases = [
     { num: 1, title: 'พื้นฐาน', color: '#10b981' },
@@ -33,14 +40,58 @@ export default function Sidebar({ isOpen, onClose }) {
       )
     : null;
 
+  const activeCourse = activeCourseId ? coursesList.find(c => c.id === activeCourseId) : null;
+
   return (
     <>
       <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <Link href="/" className="sidebar-logo" onClick={onClose}>
-            <span>🎓</span> DE101
-          </Link>
+          {/* Course Switcher */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => setShowCourses(!showCourses)}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '8px 12px', background: 'var(--glass2)', border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-sm)', cursor: 'pointer', color: 'var(--text)',
+                fontSize: '0.85rem', fontWeight: 700, fontFamily: 'var(--font-th)', transition: 'all 0.2s'
+              }}
+            >
+              <span>{activeCourse ? `${activeCourse.emoji} ${activeCourse.title}` : '🎓 DE101'}</span>
+              <span style={{ fontSize: '0.7rem', opacity: 0.5 }}>{showCourses ? '▲' : '▼'}</span>
+            </button>
+
+            {showCourses && (
+              <div style={{
+                position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100,
+                background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
+                marginTop: 4, maxHeight: 300, overflowY: 'auto', boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
+              }}>
+                <Link href="/" onClick={() => { onClose(); setShowCourses(false); }} style={{
+                  display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', textDecoration: 'none',
+                  color: !activeCourseId ? 'var(--blue)' : 'var(--text-dim)', fontSize: '0.78rem',
+                  background: !activeCourseId ? 'var(--blue-dim)' : 'transparent', transition: 'all 0.15s',
+                  fontWeight: !activeCourseId ? 700 : 400,
+                }}>🎓 DE101 — เริ่มต้นจากศูนย์</Link>
+                
+                <div style={{ height: 1, background: 'var(--border)', margin: '2px 0' }} />
+                <div style={{ padding: '4px 12px', fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>
+                  คอร์สเสริม
+                </div>
+
+                {coursesList.map(c => (
+                  <Link key={c.id} href={`/courses/${c.id}`} onClick={() => { onClose(); setShowCourses(false); }} style={{
+                    display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', textDecoration: 'none',
+                    color: activeCourseId === c.id ? 'var(--blue)' : 'var(--text-dim)', fontSize: '0.78rem',
+                    background: activeCourseId === c.id ? 'var(--blue-dim)' : 'transparent', transition: 'all 0.15s',
+                    fontWeight: activeCourseId === c.id ? 700 : 400,
+                  }}>{c.emoji} {c.title}</Link>
+                ))}
+              </div>
+            )}
+          </div>
+
           <div className="sidebar-progress">
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: `${progress}%` }} />
@@ -60,7 +111,6 @@ export default function Sidebar({ isOpen, onClose }) {
 
         <nav className="sidebar-nav">
           {filteredChapters ? (
-            /* Search results */
             <div className="phase-group">
               <div className="phase-label">
                 <span className="phase-dot" style={{ background: 'var(--cyan)' }} />
@@ -83,7 +133,6 @@ export default function Sidebar({ isOpen, onClose }) {
               })}
             </div>
           ) : (
-            /* Normal phase groups */
             phases.map(phase => (
               <div className="phase-group" key={phase.num}>
                 <div className="phase-label">
@@ -111,6 +160,7 @@ export default function Sidebar({ isOpen, onClose }) {
           {[
             { href: '/dashboard', emoji: '📊', label: 'Dashboard' },
             { href: '/courses', emoji: '📚', label: 'Courses' },
+            { href: '/projects', emoji: '🛠️', label: 'Projects' },
             { href: '/roadmap', emoji: '🎯', label: 'Roadmap' },
             { href: '/glossary', emoji: '📖', label: 'Glossary' },
           ].map(item => (
