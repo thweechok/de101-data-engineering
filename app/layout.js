@@ -12,9 +12,11 @@ export default function RootLayout({ children }) {
   const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
-    const saved = localStorage.getItem('de101-theme') || 'dark';
-    setTheme(saved);
-    document.documentElement.setAttribute('data-theme', saved);
+    try {
+      const saved = localStorage.getItem('de101-theme') || 'dark';
+      setTheme(saved);
+      document.documentElement.setAttribute('data-theme', saved);
+    } catch {}
   }, []);
 
   const toggleTheme = (e) => {

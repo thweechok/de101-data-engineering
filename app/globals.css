@@ -206,7 +206,7 @@ body {
   padding: 40px 48px 80px;
 }
 
-/* ===== TOP BAR (mobile) ===== */
+/* ===== TOP BAR ===== */
 .topbar {
   display: flex;
   position: fixed;
@@ -220,6 +220,7 @@ body {
   z-index: 99;
   align-items: center;
   padding: 0 16px;
+  gap: 8px;
 }
 
 .menu-btn {
@@ -240,6 +241,7 @@ body {
   font-size: 0.9rem;
   font-weight: 700;
   margin-left: 12px;
+  flex: 1;
 }
 
 .sidebar-overlay {
@@ -487,12 +489,6 @@ body {
   background: var(--orange-dim);
   border: 1px solid var(--orange-border);
   border-left: 4px solid var(--orange);
-}
-
-.cheatsheet::before {
-  content: '📋 Cheat Sheet: ';
-  font-weight: 700;
-  color: var(--orange);
 }
 
 /* ===== NAVIGATION ===== */
@@ -1546,15 +1542,6 @@ button, .nav-link, .start-btn {
   background: var(--glass2);
   transform: rotate(30deg) scale(1.1);
   border-color: var(--blue);
-}
-
-.topbar {
-  align-items: center;
-  gap: 8px;
-}
-
-.topbar-title {
-  flex: 1;
 }
 
 /* ===== QUIZ ===== */

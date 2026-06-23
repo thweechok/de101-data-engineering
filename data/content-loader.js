@@ -1,5 +1,6 @@
 // Content loader - merges chapter content from part1 and part2
-// Will be updated when subagents finish writing content
+import { chaptersPart1 } from './chapters-part1';
+import { chaptersPart2 } from './chapters-part2';
 
 const placeholderContent = (num, title) => `
 <h2>📖 ${title}</h2>
@@ -10,18 +11,12 @@ const placeholderContent = (num, title) => `
 let contentMap = {};
 
 try {
-  const { chaptersPart1 } = require('./chapters-part1');
   chaptersPart1.forEach(ch => { contentMap[ch.number] = ch.content; });
-} catch (e) {
-  // Part 1 not ready yet
-}
+} catch (e) {}
 
 try {
-  const { chaptersPart2 } = require('./chapters-part2');
   chaptersPart2.forEach(ch => { contentMap[ch.number] = ch.content; });
-} catch (e) {
-  // Part 2 not ready yet
-}
+} catch (e) {}
 
 export function getChapterContent(number) {
   return contentMap[number] || placeholderContent(number, `บทที่ ${number}`);

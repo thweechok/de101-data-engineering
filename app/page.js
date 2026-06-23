@@ -153,8 +153,8 @@ export default function Home() {
           </div>
         )}
 
-        <Link href={`/chapters/${chapters[0].slug}`} className="start-btn glow-btn">
-          🎓 {completed.length > 0 ? 'เรียนต่อ' : 'เริ่มเรียนเลย'} — บทที่ {completed.length > 0 ? Math.min(...chapters.filter(c => !completed.includes(c.number)).map(c => c.number)) : 0}
+        <Link href={`/chapters/${chapters[completed.length < chapters.length ? chapters.filter(c => !completed.includes(c.number))[0]?.number || 0 : 0].slug}`} className="start-btn glow-btn">
+          🎓 {completed.length >= chapters.length ? '🎉 เรียนจบแล้ว!' : completed.length > 0 ? `เรียนต่อ — บทที่ ${chapters.filter(c => !completed.includes(c.number))[0]?.number || 0}` : 'เริ่มเรียนเลย — บทที่ 0'}
         </Link>
 
         <div className="stats-row">

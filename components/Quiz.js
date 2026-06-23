@@ -74,7 +74,7 @@ export default function Quiz({ chapterNumber }) {
       <div className="quiz-container">
         <div className="quiz-result">
           <h3>ผลคะแนน</h3>
-          <p className="quiz-result__score">{getScoreMessage(score, questions.length)}</p>
+          <p className="quiz-score">{getScoreMessage(score, questions.length)}</p>
           <button className="quiz-retry-btn" onClick={handleRetry}>
             🔄 ทำใหม่
           </button>
@@ -114,11 +114,11 @@ export default function Quiz({ chapterNumber }) {
       </div>
 
       {isAnswered && (
-        <div className={`quiz-feedback ${isCorrect ? 'quiz-feedback--correct' : 'quiz-feedback--wrong'}`}>
+        <div className="quiz-explain">
           <p>
             <strong>{isCorrect ? '✅ ถูกต้อง!' : '❌ ไม่ถูกต้อง'}</strong>
           </p>
-          <p className="quiz-feedback__explain">{current.explain}</p>
+          <p>{current.explain}</p>
           <button className="quiz-next-btn" onClick={handleNext}>
             {currentIndex + 1 < questions.length ? 'ข้อถัดไป →' : 'ดูผลคะแนน →'}
           </button>
