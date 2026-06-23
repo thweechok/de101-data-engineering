@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import PageTransition from '@/components/PageTransition';
 import ReadingProgress from '@/components/ReadingProgress';
+import BackToTop from '@/components/BackToTop';
+import MobileNav from '@/components/MobileNav';
 import './globals.css';
 
 export default function RootLayout({ children }) {
@@ -48,6 +50,15 @@ export default function RootLayout({ children }) {
         <meta name="twitter:image" content="https://de-course-seven.vercel.app/images/de_roadmap.png" />
         <meta name="theme-color" content="#0a0f1c" />
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+        {/* Syntax Highlighting */}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
       </head>
       <body>
         <ReadingProgress />
@@ -67,6 +78,8 @@ export default function RootLayout({ children }) {
             <PageTransition>{children}</PageTransition>
           </main>
         </div>
+        <BackToTop />
+        <MobileNav />
       </body>
     </html>
   );

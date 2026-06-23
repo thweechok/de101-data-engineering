@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { chapters } from '@/data/chapters-index';
 import { getChapterContent } from '@/data/content-loader';
 import Quiz from '@/components/Quiz';
+import CheatSheet from '@/components/CheatSheet';
 import { useState, useEffect, useMemo } from 'react';
 
 export default function ChapterPage() {
@@ -97,6 +98,17 @@ export default function ChapterPage() {
     return () => clearTimeout(timer);
   }, [content]);
 
+  // Syntax highlighting with Prism
+  useEffect(() => {
+    if (!content) return;
+    const timer = setTimeout(() => {
+      if (typeof window !== 'undefined' && window.Prism) {
+        window.Prism.highlightAll();
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [content]);
+
   // Keyboard navigation ← →
   useEffect(() => {
     const handleKey = (e) => {
@@ -181,6 +193,8 @@ export default function ChapterPage() {
       )}
 
       <div className="chapter-content" dangerouslySetInnerHTML={{ __html: content || '<p style="color:var(--text-muted);text-align:center;padding:40px">⏳ กำลังโหลดเนื้อหา...</p>' }} />
+
+      <CheatSheet chapterNumber={chapter.number} />
 
       <Quiz chapterNumber={chapter.number} />
 
