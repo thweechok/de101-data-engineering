@@ -17,8 +17,24 @@ export default function RootLayout({ children }) {
     document.documentElement.setAttribute('data-theme', saved);
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = (e) => {
     const next = theme === 'dark' ? 'light' : 'dark';
+    // Theme transition circle
+    const circle = document.createElement('div');
+    circle.className = 'theme-transition-overlay';
+    const rect = e?.currentTarget?.getBoundingClientRect();
+    const x = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+    const y = rect ? rect.top + rect.height / 2 : 0;
+    const size = Math.max(window.innerWidth, window.innerHeight) * 2;
+    Object.assign(circle.style, {
+      left: `${x - size / 2}px`,
+      top: `${y - size / 2}px`,
+      width: `${size}px`,
+      height: `${size}px`,
+      background: next === 'dark' ? '#0a0f1c' : '#f8fafc',
+    });
+    document.body.appendChild(circle);
+    setTimeout(() => circle.remove(), 600);
     setTheme(next);
     localStorage.setItem('de101-theme', next);
     document.documentElement.setAttribute('data-theme', next);

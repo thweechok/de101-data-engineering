@@ -5,6 +5,7 @@ import { chapters } from '@/data/chapters-index';
 import { getChapterContent } from '@/data/content-loader';
 import Quiz from '@/components/Quiz';
 import CheatSheet from '@/components/CheatSheet';
+import { triggerConfetti } from '@/components/Confetti';
 import { useState, useEffect, useMemo } from 'react';
 
 export default function ChapterPage() {
@@ -130,6 +131,7 @@ export default function ChapterPage() {
       updated = completed.filter(n => n !== chapter.number);
     } else {
       updated = [...completed, chapter.number];
+      triggerConfetti();
     }
     setCompleted(updated);
     localStorage.setItem('de101-progress', JSON.stringify(updated));
