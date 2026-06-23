@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import PageTransition from '@/components/PageTransition';
+import ReadingProgress from '@/components/ReadingProgress';
 import './globals.css';
 
 export default function RootLayout({ children }) {
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
       </head>
       <body>
+        <ReadingProgress />
         <div className="topbar">
           <button className="menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
             ☰
