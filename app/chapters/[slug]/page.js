@@ -82,13 +82,17 @@ export default function ChapterPage() {
         if (pre.querySelector('.copy-btn')) return;
         const btn = document.createElement('button');
         btn.className = 'copy-btn';
-        btn.textContent = 'Copy';
+        btn.textContent = '📋 Copy';
         btn.onclick = () => {
           const code = pre.querySelector('code');
           if (code) {
             navigator.clipboard.writeText(code.textContent).then(() => {
-              btn.textContent = '✓ Copied';
-              setTimeout(() => btn.textContent = 'Copy', 2000);
+              btn.textContent = '✅ Copied!';
+              btn.classList.add('copied');
+              setTimeout(() => {
+                btn.textContent = '📋 Copy';
+                btn.classList.remove('copied');
+              }, 2000);
             });
           }
         };

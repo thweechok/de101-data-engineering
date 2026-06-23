@@ -148,8 +148,13 @@ export default function Home() {
 
         {/* Progress Ring */}
         {completed.length > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 16, gap: 8 }}>
             <ProgressRing progress={progress} size={70} strokeWidth={5} />
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              {completed.length < chapters.length
+                ? `⏰ เรียนอีก ~${Math.ceil((chapters.length - completed.length) * 20 / 60)} ชม. จบทั้งคอร์ส`
+                : '🎉 เรียนจบครบทุกบทแล้ว!'}
+            </div>
           </div>
         )}
 

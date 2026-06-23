@@ -436,6 +436,19 @@ body {
   color: var(--text);
 }
 
+.copy-btn.copied {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--green);
+  animation: copyPulse 0.3s ease;
+}
+
+@keyframes copyPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
 /* ===== SPECIAL BOXES ===== */
 .tip-box, .warning-box, .interview-box, .exercise-box, .cheatsheet {
   padding: 16px 20px;
@@ -2521,3 +2534,216 @@ button, .nav-link, .start-btn {
 .chapter-list-item:nth-child(14) { animation-delay: 0.7s; }
 .chapter-list-item:nth-child(15) { animation-delay: 0.75s; }
 .chapter-list-item:nth-child(16) { animation-delay: 0.8s; }
+
+/* ===== ROADMAP ===== */
+.roadmap-timeline {
+  position: relative;
+}
+
+.roadmap-phase {
+  display: flex;
+  gap: 20px;
+  position: relative;
+  margin-bottom: 32px;
+  animation: fadeSlideUp 0.5s ease both;
+}
+
+.roadmap-phase:nth-child(1) { animation-delay: 0.1s; }
+.roadmap-phase:nth-child(2) { animation-delay: 0.2s; }
+.roadmap-phase:nth-child(3) { animation-delay: 0.3s; }
+.roadmap-phase:nth-child(4) { animation-delay: 0.4s; }
+
+.roadmap-connector {
+  position: absolute;
+  left: 19px;
+  top: 44px;
+  width: 2px;
+  height: calc(100% + 16px);
+  transition: background 0.5s ease;
+}
+
+.roadmap-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.roadmap-phase.complete .roadmap-circle {
+  animation: badgeUnlock 0.6s ease;
+}
+
+.roadmap-content {
+  flex: 1;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  transition: all 0.2s;
+}
+
+.roadmap-content:hover {
+  border-color: var(--border2);
+}
+
+.roadmap-phase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.roadmap-progress-badge {
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.roadmap-skill {
+  padding: 3px 10px;
+  background: var(--glass2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.roadmap-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.roadmap-chapter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  transition: all 0.2s;
+}
+
+.roadmap-chapter:hover {
+  background: var(--glass2);
+  color: var(--text);
+}
+
+.roadmap-chapter.done {
+  color: var(--green);
+}
+
+/* ===== GLOSSARY ===== */
+.glossary-search {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: var(--font-th);
+  outline: none;
+  transition: all 0.2s;
+  margin-bottom: 24px;
+}
+
+.glossary-search:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-dim);
+}
+
+.glossary-search-wrap {
+  position: relative;
+}
+
+.glossary-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.glossary-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.glossary-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  align-items: baseline;
+  animation: fadeSlideUp 0.3s ease both;
+}
+
+.glossary-item:hover {
+  border-color: var(--blue-border);
+  background: var(--glass2);
+}
+
+.glossary-term {
+  font-family: var(--font-code);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--blue);
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.glossary-thai {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.glossary-desc {
+  flex: 1;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.glossary-chapter-badge {
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: var(--glass2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.glossary-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.glossary-letter {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--blue);
+  margin-top: 20px;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
