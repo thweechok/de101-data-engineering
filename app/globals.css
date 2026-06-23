@@ -1873,3 +1873,176 @@ button, .nav-link, .start-btn {
 [data-theme="light"] .chapter-content pre[class*="language-"] {
   background: #f8f8f8 !important;
 }
+
+/* ===== CERTIFICATE ===== */
+.cert-locked, .cert-section {
+  margin-top: 48px;
+  padding: 32px 24px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--glass);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  animation: fadeSlideUp 0.6s ease 0.5s both;
+}
+
+.cert-locked-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.cert-unlocked-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-16px); }
+  60% { transform: translateY(-8px); }
+}
+
+.cert-locked h3, .cert-section h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.cert-locked p, .cert-section p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.cert-progress-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.cert-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--bg4);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.cert-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--purple));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.cert-progress-info span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.cert-form {
+  display: flex;
+  gap: 10px;
+  max-width: 450px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cert-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-th);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.cert-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-dim);
+}
+
+.cert-generate-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: var(--font-th);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cert-generate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+.cert-generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cert-result {
+  animation: fadeSlideUp 0.5s ease;
+}
+
+.cert-canvas {
+  width: 100%;
+  max-width: 600px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.cert-download-btn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--green), #059669);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: var(--font-th);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 8px;
+}
+
+.cert-download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+}
+
+.cert-retry-btn {
+  padding: 12px 24px;
+  background: var(--glass2);
+  color: var(--text);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font-th);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cert-retry-btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}

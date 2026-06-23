@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { chapters } from '@/data/chapters-index';
+import Certificate from '@/components/Certificate';
 import { useState, useEffect, useRef } from 'react';
 
 function AnimatedCounter({ target, suffix = '', color }) {
@@ -132,6 +133,8 @@ export default function Home() {
             <li>✅ เตรียมสัมภาษณ์ได้ (25+ คำถามพร้อมเฉลย)</li>
           </ul>
         </div>
+
+        <Certificate />
 
         <p style={{ marginTop: 40, fontSize: '0.72rem', color: 'var(--text-muted)' }}>
           DE101 © 2026 — คอร์สฟรีสำหรับคนไทยที่อยากเป็น Data Engineer
