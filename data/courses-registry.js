@@ -98,6 +98,20 @@ export const coursesRegistry = {
     tags: ['Kafka', 'Streaming', 'Event-driven', 'Real-time'],
     dataFile: 'kafka101',
   },
+  '10phase-de': {
+    id: '10phase-de',
+    emoji: '🗺️',
+    title: '10 Phase สู่ DE',
+    fullTitle: '10 Phase สู่การเป็น Data Engineer',
+    subtitle: 'Career → SQL → Python → Storage → Pipeline → Portfolio',
+    desc: 'คอร์สครบวงจร 10 Phase ครอบคลุมทุกทักษะสำหรับเป็น Data Engineer ตั้งแต่เริ่มต้นจนพร้อมสมัครงาน',
+    level: 'เริ่มต้น-สูง',
+    levelColor: '#10b981',
+    chapterCount: 11,
+    duration: '~10 ชม.',
+    tags: ['SQL', 'Python', 'Spark', 'Kafka', 'Airflow', 'dbt', 'Cloud', 'Interview'],
+    dataFile: '10phase-de',
+  },
 };
 
 export const coursesList = Object.values(coursesRegistry);

@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import PageTransition from '@/components/PageTransition';
 import ReadingProgress from '@/components/ReadingProgress';
@@ -8,12 +9,18 @@ import MobileNav from '@/components/MobileNav';
 import './globals.css';
 
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [fontSize, setFontSize] = useState(16);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [showEmailPopup, setShowEmailPopup] = useState(false);
   const [emailSaved, setEmailSaved] = useState(false);
+
+  // Sidebar only shows on chapter/lesson pages, not on homepage or courses listing
+  const isHomePage = pathname === '/';
+  const isCoursesListing = pathname === '/courses';
+  const showSidebar = !isHomePage && !isCoursesListing;
 
   useEffect(() => {
     try {
@@ -132,33 +139,35 @@ export default function RootLayout({ children }) {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-protobuf.min.js" defer></script>
       </head>
       <body>
-        <ReadingProgress />
-        <div className="topbar">
-          <button className="menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-            ☰
-          </button>
-          <span className="topbar-title">🎓 DE101</span>
-          <div className="font-controls">
-            <button className="font-btn" onClick={() => changeFontSize(-1)} title="ลดขนาดตัวอักษร">A-</button>
-            <span className="font-size-label">{fontSize}</span>
-            <button className="font-btn" onClick={() => changeFontSize(1)} title="เพิ่มขนาดตัวอักษร">A+</button>
+        {showSidebar && <ReadingProgress />}
+        {showSidebar && (
+          <div className="topbar">
+            <button className="menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+              ☰
+            </button>
+            <span className="topbar-title">🎓 DE101</span>
+            <div className="font-controls">
+              <button className="font-btn" onClick={() => changeFontSize(-1)} title="ลดขนาดตัวอักษร">A-</button>
+              <span className="font-size-label">{fontSize}</span>
+              <button className="font-btn" onClick={() => changeFontSize(1)} title="เพิ่มขนาดตัวอักษร">A+</button>
+            </div>
+            <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}>
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+            <button className="shortcut-btn" onClick={() => setShowShortcuts(true)} title="Keyboard Shortcuts (?)">
+              ⌨️
+            </button>
           </div>
-          <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}>
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
-          <button className="shortcut-btn" onClick={() => setShowShortcuts(true)} title="Keyboard Shortcuts (?)">
-            ⌨️
-          </button>
-        </div>
+        )}
 
-        <div className="app-layout">
-          <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-          <main className="main-content">
+        <div className={showSidebar ? 'app-layout' : 'app-layout app-layout--full'}>
+          {showSidebar && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
+          <main className={showSidebar ? 'main-content' : 'main-content main-content--full'}>
             <PageTransition>{children}</PageTransition>
           </main>
         </div>
         <BackToTop />
-        <MobileNav />
+        {showSidebar && <MobileNav />}
 
         {/* Shortcuts Modal */}
         {showShortcuts && (

@@ -200,6 +200,15 @@ body {
   padding-top: 56px;
 }
 
+/* Full-width mode (no sidebar - homepage, courses listing) */
+.app-layout--full {
+  display: block;
+}
+.main-content--full {
+  margin-left: 0;
+  padding-top: 0;
+}
+
 .content-wrapper {
   max-width: 860px;
   margin: 0 auto;

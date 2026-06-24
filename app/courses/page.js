@@ -148,6 +148,24 @@ const courses = [
     features: ['📖 8 บทเรียน', '🎯 50+ คำถาม', '📄 Resume Template'],
     prereq: 'เรียนตอนพร้อมหางาน',
   },
+  {
+    id: '10phase-de',
+    order: 9,
+    emoji: '🗺️',
+    title: '10 Phase สู่การเป็น Data Engineer',
+    subtitle: 'Career → SQL → Python → Storage → Pipeline → Portfolio',
+    desc: 'คอร์สครบวงจร 10 Phase ครอบคลุมทุกทักษะที่ต้องรู้ ตั้งแต่ Career Overview, SQL, Python, Storage, ETL, Orchestration, Infra, Data Modeling ไปจนถึง Portfolio & Interview',
+    chapters: 11,
+    duration: '~10 ชม.',
+    level: 'เริ่มต้น-สูง',
+    levelColor: '#10b981',
+    status: 'active',
+    link: '/courses/10phase-de',
+    group: 'main',
+    tags: ['SQL', 'Python', 'Spark', 'Kafka', 'Airflow', 'dbt', 'Cloud', 'Interview'],
+    features: ['📖 11 บทเรียน', '💻 โค้ดจริงทุกบท', '🏆 ครบจบในคอร์สเดียว'],
+    prereq: 'ไม่ต้องมีพื้นฐาน',
+  },
 ];
 
 const groupLabels = {
