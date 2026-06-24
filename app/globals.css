@@ -3208,3 +3208,62 @@ button, .nav-link, .start-btn {
 @media (max-width: 600px) {
   .courses-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== DETAILS/SUMMARY (Exercise Solutions) ===== */
+.chapter-content details {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+
+.chapter-content details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--blue);
+  font-size: 0.88rem;
+  user-select: none;
+}
+
+.chapter-content details summary:hover {
+  color: var(--purple);
+}
+
+.chapter-content details[open] summary {
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ===== TABLES IN CONTENT ===== */
+.chapter-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.82rem;
+}
+
+.chapter-content th, .chapter-content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.chapter-content th {
+  background: var(--glass2);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.chapter-content tr:hover {
+  background: var(--glass);
+}
+
+/* ===== IMAGES IN CONTENT ===== */
+.chapter-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 16px 0;
+}

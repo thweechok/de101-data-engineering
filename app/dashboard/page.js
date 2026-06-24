@@ -8,7 +8,7 @@ import ProgressRing from '@/components/ProgressRing';
 function getCompleted() {
   if (typeof window === 'undefined') return [];
   try {
-    return JSON.parse(localStorage.getItem('de101-completed') || '[]');
+    return JSON.parse(localStorage.getItem('de101-progress') || '[]');
   } catch { return []; }
 }
 
@@ -28,7 +28,9 @@ function getStudyDates() {
 
 function getStudyTime() {
   if (typeof window === 'undefined') return 0;
-  return parseInt(localStorage.getItem('de101-study-time') || '0', 10);
+  try {
+    return parseInt(localStorage.getItem('de101-study-time') || '0', 10);
+  } catch { return 0; }
 }
 
 function calcStreak(dates) {
@@ -92,7 +94,7 @@ export default function DashboardPage() {
     const interval = setInterval(() => {
       setStudyTime(prev => {
         const next = prev + 1;
-        localStorage.setItem('de101-study-time', String(next));
+        try { localStorage.setItem('de101-study-time', String(next)); } catch {}
         return next;
       });
     }, 60000); // every minute
@@ -111,12 +113,13 @@ export default function DashboardPage() {
   }, []);
 
   const completedCount = completed.length;
-  const progress = Math.round((completedCount / 16) * 100);
-  const estTimeRemaining = (16 - completedCount) * 45; // ~45 min per chapter
+  const totalChapters = chapters.length;
+  const progress = totalChapters > 0 ? Math.round((completedCount / totalChapters) * 100) : 0;
+  const estTimeRemaining = (totalChapters - completedCount) * 45; // ~45 min per chapter
 
   /* quiz totals */
   const totalQuizScore = Object.values(quizScores).reduce((a, b) => a + b, 0);
-  const totalPossible = 16 * 3;
+  const totalPossible = totalChapters * 3;
   const quizAttempted = Object.keys(quizScores).length;
 
   if (!mounted) return null;

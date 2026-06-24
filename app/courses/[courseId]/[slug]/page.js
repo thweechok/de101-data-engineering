@@ -1,12 +1,13 @@
 'use client';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { coursesRegistry } from '@/data/courses-registry';
 import { getCourseChapters } from '@/data/course-loader';
 import { useState, useEffect } from 'react';
 
 export default function CourseChapterPage() {
   const { courseId, slug } = useParams();
+  const router = useRouter();
   const course = coursesRegistry[courseId];
   const chapters = getCourseChapters(courseId);
   const currentChapter = chapters.find(c => c.slug === slug) || null;
@@ -82,9 +83,9 @@ export default function CourseChapterPage() {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       const idx = chapters.findIndex(c => c.slug === slug);
       if (e.key === 'ArrowLeft' && idx > 0) {
-        window.location.href = `/courses/${courseId}/${chapters[idx - 1].slug}`;
+        router.push(`/courses/${courseId}/${chapters[idx - 1].slug}`);
       } else if (e.key === 'ArrowRight' && idx < chapters.length - 1) {
-        window.location.href = `/courses/${courseId}/${chapters[idx + 1].slug}`;
+        router.push(`/courses/${courseId}/${chapters[idx + 1].slug}`);
       }
     };
     window.addEventListener('keydown', handleKey);

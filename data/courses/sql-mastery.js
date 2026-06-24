@@ -6,6 +6,7 @@ export const chapters = [
     title: 'SQL คืออะไร?',
     content: `
 <h2>📊 SQL คืออะไร? — ทำไมยังเป็นทักษะ #1 ของสาย Data</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/sql-mastery-cover.png" alt="SQL Mastery — เก่ง SQL สุดทาง" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>สมมุติว่าน้องเปิดร้านขายของออนไลน์ มีออเดอร์วันละ 10,000 รายการ ข้อมูลลูกค้า สินค้า การชำระเงิน ทั้งหมดอยู่ในฐานข้อมูล ถ้าเจ้านายถามว่า <strong>"เดือนนี้ยอดขาย Top 5 จังหวัดคืออะไร?"</strong> — น้องจะตอบยังไง? เปิด Excel นับทีละแถว? ไม่ไหวแน่ นี่คือเหตุผลที่ SQL เกิดมา</p>
 
@@ -178,6 +179,7 @@ LIMIT 10;</code></pre>
     title: 'SELECT, WHERE, ORDER BY, LIMIT',
     content: `
 <h2>🔍 SELECT, WHERE, ORDER BY, LIMIT — พื้นฐานที่ต้องแม่น</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/sql-execution-order.png" alt="SQL Query Execution Order" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>ลองนึกภาพว่าน้องเป็น Data Engineer ที่เพิ่งเข้าทำงานวันแรก PM วิ่งมาถามว่า <strong>"ช่วยดึงรายชื่อลูกค้า Premium ที่สั่งซื้อเกิน 5,000 บาท เรียงจากยอดสูงสุดหน่อย"</strong> — นี่คือ query แรกที่น้องต้องเขียนได้ภายใน 30 วินาที</p>
 
@@ -455,6 +457,7 @@ WHERE (username LIKE 'A%' OR username LIKE 'B%')
     title: 'JOINs Deep Dive',
     content: `
 <h2>🔗 JOINs Deep Dive — เชื่อมตารางแบบมืออาชีพ</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/sql-joins-venn.png" alt="SQL JOINs — Venn Diagram" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>สมมุติว่าเจ้านายถามว่า <strong>"ลูกค้าคนไหนซื้อสินค้าอะไรบ้าง ในเดือนที่แล้ว?"</strong> ข้อมูลลูกค้าอยู่ตาราง <code>users</code> ข้อมูลออเดอร์อยู่ตาราง <code>orders</code> ข้อมูลสินค้าอยู่ตาราง <code>products</code> — จะรวมข้อมูลจาก 3 ตารางยังไง? นี่คือพลังของ JOIN!</p>
 
@@ -1195,6 +1198,7 @@ ORDER BY category, total_sold DESC;</code></pre>
     title: 'Window Functions',
     content: `
 <h2>🌟 Window Functions — ทักษะที่แยก Junior ออกจาก Senior</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/sql-window-functions.png" alt="SQL Window Functions" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>ถ้าน้องต้องหา <strong>"อันดับยอดขายของแต่ละสินค้าภายในหมวดเดียวกัน"</strong> หรือ <strong>"เปรียบเทียบยอดขายเดือนนี้กับเดือนก่อน"</strong> — GROUP BY ทำไม่ได้! เพราะ GROUP BY ยุบแถว แต่เราต้องการ <strong>คำนวณโดยไม่ยุบแถว</strong> นี่คือ Window Functions</p>
 

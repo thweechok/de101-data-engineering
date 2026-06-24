@@ -6,6 +6,7 @@ export const chapters = [
     title: 'แนะนำ GCP Certification',
     content: `
 <h2>☁️ ทำไมต้องสอบ GCP Professional Data Engineer?</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/gcp-cert-cover.png" alt="GCP Certification Prep" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>สมมติว่าน้องทำงาน Data Engineering มา 2-3 ปี สร้าง pipeline, เขียน SQL, ใช้ Airflow เป็น แต่พอไปสมัครงานบริษัทใหญ่ๆ ที่ใช้ GCP เช่น LINE, Agoda, Grab — เขาถามว่า "มี cert ไหม?" ถ้ามี GCP Professional Data Engineer Certificate จะช่วยให้น้อง <strong>โดดเด่นจากผู้สมัครคนอื่น</strong> ทันที เพราะ cert นี้เป็นที่ยอมรับทั่วโลก</p>
 
@@ -180,6 +181,8 @@ gcloud services enable dlp.googleapis.com
     title: 'BigQuery Advanced',
     content: `
 <h2>📊 ทำไม BigQuery ถึงเป็นหัวใจของ GCP Data Engineering?</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/bigquery-arch.png" alt="BigQuery Architecture" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/gcp-services.png" alt="GCP Data Services Overview" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>ลองนึกภาพว่าน้องทำงานที่บริษัท e-commerce ขนาดใหญ่ ข้อมูล order ทุกวันมี <strong>500 ล้าน rows</strong> ถ้าใช้ PostgreSQL ก็ query ช้ามาก แต่ BigQuery สามารถ scan ข้อมูล petabyte-scale ได้ใน <strong>วินาที</strong> เพราะมันเป็น serverless, columnar, massively parallel processing (MPP) engine ที่ Google ออกแบบมาโดยเฉพาะ</p>
 

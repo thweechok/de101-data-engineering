@@ -146,7 +146,7 @@ export default function ChapterPage() {
       triggerConfetti();
     }
     setCompleted(updated);
-    localStorage.setItem('de101-progress', JSON.stringify(updated));
+    try { localStorage.setItem('de101-progress', JSON.stringify(updated)); } catch {}
   };
 
   // Calculate reading time

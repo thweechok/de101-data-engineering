@@ -1,19 +1,22 @@
-// Central course content loader
-// Import all course data files here
+// Central course content loader - static imports
+import { chapters as sqlChapters } from './courses/sql-mastery';
+import { chapters as pythonChapters } from './courses/python-de';
+import { chapters as de201Chapters } from './courses/de201';
+import { chapters as de301Chapters } from './courses/de301';
+import { chapters as interviewChapters } from './courses/interview';
+import { chapters as gcpChapters } from './courses/gcp-cert';
+import { chapters as kafkaChapters } from './courses/kafka101';
 
-let courseModules = {};
-
-// Will be populated as courses are created
-try { courseModules['sql-mastery'] = require('./courses/sql-mastery'); } catch {}
-try { courseModules['python-de'] = require('./courses/python-de'); } catch {}
-try { courseModules['de201'] = require('./courses/de201'); } catch {}
-try { courseModules['de301'] = require('./courses/de301'); } catch {}
-try { courseModules['interview'] = require('./courses/interview'); } catch {}
-try { courseModules['gcp-cert'] = require('./courses/gcp-cert'); } catch {}
-try { courseModules['kafka101'] = require('./courses/kafka101'); } catch {}
+const courseModules = {
+  'sql-mastery': sqlChapters,
+  'python-de': pythonChapters,
+  'de201': de201Chapters,
+  'de301': de301Chapters,
+  'interview': interviewChapters,
+  'gcp-cert': gcpChapters,
+  'kafka101': kafkaChapters,
+};
 
 export function getCourseChapters(courseId) {
-  const mod = courseModules[courseId];
-  if (!mod) return [];
-  return mod.chapters || mod.default?.chapters || [];
+  return courseModules[courseId] || [];
 }

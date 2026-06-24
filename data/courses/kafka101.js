@@ -6,6 +6,7 @@ export const chapters = [
     title: 'Kafka คืออะไร?',
     content: `
 <h2>🔥 ทำไม Real-Time Data ถึงสำคัญมากในยุคนี้?</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/kafka101-cover.png" alt="Kafka 101 — Real-time Streaming" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>ลองนึกภาพว่าพี่ทำงานอยู่ที่ e-commerce platform ที่มี user หลายล้านคน ทุกวินาทีมีคนกดสั่งซื้อสินค้า คนกดเพิ่มสินค้าลง cart มี payment เข้ามา มี notification ที่ต้องส่ง ข้อมูลเหล่านี้ต้องถูก <strong>ประมวลผลแบบ real-time</strong> ไม่ใช่รอวันรุ่ง</p>
 
@@ -319,6 +320,7 @@ print('Sent 100 events!')</code></pre>
     title: 'Kafka Architecture',
     content: `
 <h2>🏗️ ทำไมต้องเข้าใจ Architecture?</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/kafka-architecture.png" alt="Kafka Architecture" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>สมมติพี่ได้รับมอบหมายให้ออกแบบ Kafka cluster สำหรับ e-commerce platform ที่รับ order 50,000 ต่อวินาที ถ้าไม่เข้าใจว่า Kafka ทำงานยังไงข้างใน พี่จะตั้ง partition กี่ตัว? replication factor เท่าไหร่? broker กี่เครื่อง?</p>
 
@@ -1328,6 +1330,7 @@ Consumer Poll Loop Lifecycle:
     title: 'Consumer Groups & Offsets',
     content: `
 <h2>👥 ทำไม Consumer Groups ถึงเป็น Killer Feature ของ Kafka?</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/kafka-consumers.png" alt="Kafka Consumer Groups" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>ลองนึกภาพ: ระบบ order processing ของพี่ต้องรับ 10,000 orders/sec แต่ consumer 1 ตัว process ได้แค่ 2,000 orders/sec จะทำยังไง?</p>
 

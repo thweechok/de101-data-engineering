@@ -6,6 +6,7 @@ export const chapters = [
     title: 'ทบทวน DE201 (จาก Junior สู่ Mid)',
     content: `
 <h2>🚀 ยินดีต้อนรับสู่ DE201 — ก้าวจาก Junior สู่ Mid-Level Data Engineer</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/de201-cover.png" alt="DE201 — Intermediate Data Engineering" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>ถ้าคุณผ่าน DE101 มาแล้ว คุณรู้จัก SQL พื้นฐาน, ETL อย่างง่าย, Airflow เบื้องต้น และ dbt เบื้องต้น ตอนนี้คำถามคือ — <strong>อะไรที่ทำให้ Mid-Level DE ต่างจาก Junior?</strong></p>
 
@@ -2212,6 +2213,7 @@ if __name__ == "__main__":
     title: 'CI/CD for Data (GitHub Actions, Terraform)',
     content: `
 <h2>🔄 CI/CD for Data — Deploy Pipeline อย่างมืออาชีพ</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/cicd-pipeline.png" alt="CI/CD Pipeline for Data Engineering" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>Junior DE deploy ด้วยมือ: SSH เข้า server แล้ว git pull — Mid-Level DE ตั้งค่า <strong>CI/CD pipeline</strong> ที่ทำทุกอย่างอัตโนมัติ ตั้งแต่ test → lint → deploy → monitor</p>
 

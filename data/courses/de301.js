@@ -6,6 +6,7 @@ export const chapters = [
     title: 'จาก Mid สู่ Senior — Mindset Shift',
     content: `
 <h2>🎯 ทำไม Senior ถึง "คิดต่าง" จาก Mid?</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/de301-cover.png" alt="DE301 — Advanced & Senior Level" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>สมมติว่าคุณเป็น Mid-level Data Engineer ที่ทำงานมา 2-3 ปี คุณเขียน Pipeline ได้คล่อง, deploy Airflow DAG ได้ไม่มีปัญหา, query SQL ได้เร็ว แต่วันหนึ่ง PM ถามว่า <em>"เราควรใช้ Kafka หรือ Pub/Sub ดี?"</em> — แล้วคุณตอบไม่ได้ หรือตอบได้แต่ไม่มั่นใจ... นั่นคือจุดที่คุณรู้ว่า <strong>ยังไม่ถึง Senior</strong></p>
 
@@ -265,6 +266,7 @@ Postmortem ควรมี: Timeline, Root Cause, 5 Whys, Action Items พร้
     title: 'Lakehouse Architecture — Delta Lake, Iceberg, Hudi',
     content: `
 <h2>🎯 ทำไมต้อง Lakehouse? — จุดจบของ "Data Warehouse vs Data Lake"</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/lakehouse-arch.png" alt="Lakehouse Architecture" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>ลองนึกภาพบริษัท e-commerce ที่มี:</p>
 <ul>
@@ -581,6 +583,7 @@ Q3: Use case หลักคือ heavy upsert/CDC?
     title: 'Data Mesh — Domain-Driven Data',
     content: `
 <h2>🎯 ทำไม Data Mesh? — เมื่อ Central Data Team กลายเป็น Bottleneck</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/data-mesh.png" alt="Data Mesh Architecture" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>ลองนึกภาพองค์กรใหญ่ที่มี 20 product teams แต่มี Data Team แค่ 5 คน ทุกคนต้องส่ง request มาที่ Data Team เพื่อ:</p>
 <ul>

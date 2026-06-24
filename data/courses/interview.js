@@ -6,6 +6,8 @@ export const chapters = [
     title: 'ภาพรวมสัมภาษณ์ DE',
     content: `
 <h2>🎯 ภาพรวมกระบวนการสัมภาษณ์ Data Engineer</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/interview-cover.png" alt="DE Interview Bootcamp" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/interview-process.png" alt="Interview Process Flow" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>ก่อนจะไปลุยเตรียมตัว พี่อยากให้น้องเข้าใจ <strong>"สนามรบ"</strong> ก่อน — การสัมภาษณ์ Data Engineer ไม่เหมือนกับ Software Engineer ทั่วไป มันมีความเฉพาะตัวมาก เพราะต้องวัดทั้ง SQL, Python, System Design, Cloud และ Soft Skills ภายในเวลาจำกัด ถ้าน้องรู้ว่าแต่ละรอบเขาวัดอะไร น้องจะเตรียมตัวได้ตรงจุดมากขึ้น</p>
 
@@ -1748,6 +1750,7 @@ cdc_design = {
     title: 'Behavioral Interview',
     content: `
 <h2>🗣️ Behavioral Interview — STAR Method & 15 คำถามพร้อมแนวตอบ</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/star-method.png" alt="STAR Method for Interview" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>หลายคนคิดว่า behavioral "ไม่สำคัญ" แต่ความจริงคือ <strong>มันเป็นรอบที่ทำให้คนตก offer มากที่สุด</strong> เพราะแม้ technical ดีมาก แต่ถ้า culture fit ไม่ผ่าน ก็ไม่ได้งาน Big Tech อย่าง Amazon เน้น behavioral มากถึง 50% ของ overall score!</p>
 

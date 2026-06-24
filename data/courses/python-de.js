@@ -6,6 +6,7 @@ export const chapters = [
     title: 'Python ทบทวน',
     content: `
 <h2>🐍 บทที่ 0: Python ทบทวน — Variables, Types & Control Flow</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/python-de-cover.png" alt="Python for Data Engineering" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>สมมติว่าพี่โยนงานให้น้องว่า "ช่วยเขียน pipeline อ่าน CSV แล้ว clean ข้อมูลที" ถ้าน้องยังไม่มั่นใจเรื่อง type casting, string formatting, หรือ list comprehension — pipeline นั้นจะพังตั้งแต่บรรทัดแรก บทนี้เราจะทบทวน Python fundamentals ที่ DE ใช้ทุกวัน ไม่ใช่แค่ท่องจำ แต่เข้าใจจริงว่า "ทำไม Python ทำงานแบบนี้"</p>
 
@@ -573,6 +574,7 @@ def get_exchange_rate(currency: str) -> float:
     title: 'OOP สำหรับ DE',
     content: `
 <h2>🏛️ บทที่ 2: OOP — Class, Inheritance, @property & Dunder Methods</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/python-oop.png" alt="Python OOP Concepts" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>หลาย DE มองว่า OOP เป็นเรื่องของ web dev แต่จริง ๆ แล้ว pipeline frameworks อย่าง Airflow, dbt, Spark ล้วนสร้างบน OOP ถ้าน้องอยากเขียน <strong>custom operator, reusable connector, หรือ data model</strong> — OOP คือพื้นฐานที่ขาดไม่ได้</p>
 
@@ -2163,6 +2165,7 @@ def optimize_dtypes(df: pd.DataFrame) -> pd.DataFrame:
     title: 'Async & Concurrency',
     content: `
 <h2>⚡ บทที่ 7: Async & Concurrency — asyncio & Threading</h2>
+<div style="text-align:center;margin:20px 0"><img src="/images/courses/python-async.png" alt="Python Async vs Sync" style="max-width:100%;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" loading="lazy" /></div>
 
 <p>สมมติน้องต้องดึง API 100 endpoints — ถ้าทำ sequential ใช้เวลา 100 × 2 วินาที = 200 วินาที แต่ถ้าทำ concurrent ใช้เวลาแค่ ~5 วินาที! บทนี้สอนวิธีทำ I/O-bound tasks แบบ concurrent ซึ่งเป็นทักษะสำคัญของ DE ที่ทำงานกับ APIs, databases, file systems</p>
 
