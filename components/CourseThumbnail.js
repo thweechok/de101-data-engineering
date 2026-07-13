@@ -1,26 +1,25 @@
-// CourseThumbnail.js — cover image with emoji fallback
+// CourseThumbnail.js — cover image with emoji fallback (GitHub raw CDN)
 'use client';
 import { useState } from 'react';
 
+// GitHub raw CDN — bypasses Vercel static file limit issues
+const GITHUB_RAW = 'https://raw.githubusercontent.com/thweechok/de101-data-engineering/master/public';
+
 export default function CourseThumbnail({ course, compact = false }) {
   const { id, emoji, title, levelColor, level, order } = course;
-  const [imgErr, setImgErr] = useState(false);
+  const [imgErr, setImgErr]   = useState(false);
   const [triedAlt, setTriedAlt] = useState(false);
 
-  // Primary: /images/courses/{id}.png  (flat structure = works on Vercel)
-  // Fallback: /images/courses/{id}.jpg (some old files)
+  // Try /images/courses/{id}.png  →  fallback /images/courses/{id}.jpg  →  emoji
   const imgSrc = !triedAlt
-    ? `/images/courses/${id}.png`
-    : `/images/courses/${id}.jpg`;
+    ? `${GITHUB_RAW}/images/courses/${id}.png`
+    : `${GITHUB_RAW}/images/courses/${id}.jpg`;
 
   const h = compact ? 110 : undefined;
 
   const handleError = () => {
-    if (!triedAlt) {
-      setTriedAlt(true);   // try .jpg
-    } else {
-      setImgErr(true);     // both failed → emoji
-    }
+    if (!triedAlt) { setTriedAlt(true); }
+    else           { setImgErr(true);   }
   };
 
   return (
