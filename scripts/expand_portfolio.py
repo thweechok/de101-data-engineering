@@ -1057,15 +1057,15 @@ for i, (num, slug, emoji, title, content) in enumerate(chapters_data):
     ch_size = len(content.encode('utf-8'))
     print(f"  Chapter {num} ({slug}): {ch_size} chars ({ch_size/1024:.1f} KB)")
 
-if size_kb < 60:
-    print(f"WARNING: File is only {size_kb:.1f} KB, target is 60 KB+")
-else:
-    print(f"✅ Target met: {size_kb:.1f} KB >= 60 KB")
-
-# Write output
+# Write output FIRST (before any emoji prints that may fail)
 os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
     f.write(output)
 
-print(f"\n✅ Written to: {OUTPUT_PATH}")
-print(f"   Final size: {os.path.getsize(OUTPUT_PATH) / 1024:.1f} KB")
+if size_kb < 60:
+    print(f"WARNING: File is {size_kb:.1f} KB, target is 60 KB+")
+else:
+    print(f"OK: Target met: {size_kb:.1f} KB >= 60 KB")
+
+print(f"Written {os.path.getsize(OUTPUT_PATH)} bytes to {OUTPUT_PATH}")
+print(f"Final size: {os.path.getsize(OUTPUT_PATH) / 1024:.1f} KB")
