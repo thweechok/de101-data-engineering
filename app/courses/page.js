@@ -252,6 +252,212 @@ const groupLabels = {
   ecom: { label: '🛒 E-Commerce', color: '#ef4444' },
 };
 
+/* ═══════════════════════════════════════════════════════
+   DE Learning Roadmap — 27 courses, 5 phases
+   ═══════════════════════════════════════════════════════ */
+const DE_PHASES = [
+  {
+    phase: '🟣 Phase 1', label: 'Foundation', sub: 'เริ่มจาก 0 ได้เลย', color: '#8b5cf6',
+    courses: [
+      { id: 'de101',          emoji: '📊', name: 'DE101 พื้นฐาน' },
+      { id: 'sql-mastery',    emoji: '🗄️', name: 'SQL Mastery' },
+      { id: 'python-de',      emoji: '🐍', name: 'Python for DE' },
+      { id: 'excel-business', emoji: '📊', name: 'Excel Business' },
+      { id: 'power-bi',       emoji: '📊', name: 'Power BI' },
+    ],
+  },
+  {
+    phase: '🔵 Phase 2', label: 'Core Pipeline', sub: 'สร้าง Pipeline จริง', color: '#3b82f6',
+    courses: [
+      { id: 'de201',             emoji: '🚀', name: 'DE201 Pipeline' },
+      { id: 'docker-de',         emoji: '🐳', name: 'Docker for DE' },
+      { id: 'kafka101',          emoji: '🔥', name: 'Kafka 101' },
+      { id: 'gcp-cert',          emoji: '☁️', name: 'GCP Cloud' },
+      { id: 'python-automation', emoji: '🤖', name: 'Python Automation' },
+    ],
+  },
+  {
+    phase: '🟠 Phase 3', label: 'Advanced', sub: 'ระดับ Senior DE', color: '#f59e0b',
+    courses: [
+      { id: 'de301',           emoji: '💎', name: 'DE301 Production' },
+      { id: 'dbt-mastery',     emoji: '🔧', name: 'dbt Mastery' },
+      { id: 'airflow-advanced',emoji: '🌬️', name: 'Airflow Advanced' },
+      { id: 'pyspark-mastery', emoji: '⚡', name: 'PySpark' },
+    ],
+  },
+  {
+    phase: '⭐ Phase 4', label: 'Specialization', sub: 'เลือกตามสาย', color: '#22c55e',
+    courses: [
+      { id: 'databricks-fundamentals', emoji: '🧱', name: 'Databricks' },
+      { id: 'terraform-de',            emoji: '🔩', name: 'Terraform' },
+      { id: 'aws-data-engineer',       emoji: '☁️', name: 'AWS DE' },
+      { id: 'azure-data-engineer',     emoji: '🔷', name: 'Azure DE' },
+      { id: 'apache-flink',            emoji: '⚡', name: 'Apache Flink' },
+      { id: 'medallion-architecture',  emoji: '🏅', name: 'Medallion' },
+      { id: 'data-quality',            emoji: '✅', name: 'Data Quality' },
+      { id: 'data-catalog',            emoji: '📋', name: 'Data Catalog' },
+      { id: 'de-system-design',        emoji: '🏗️', name: 'System Design' },
+    ],
+  },
+  {
+    phase: '🏆 Career', label: 'Ready to Work', sub: 'เตรียมงาน & สร้าง Brand', color: '#ef4444',
+    courses: [
+      { id: '10phase-de',  emoji: '🗺️', name: '10 Phase DE' },
+      { id: 'interview',   emoji: '🎤', name: 'Interview Prep' },
+      { id: 'de-portfolio',emoji: '💼', name: 'DE Portfolio' },
+      { id: 'freelance-de',emoji: '💰', name: 'Freelance DE' },
+    ],
+  },
+];
+
+function DELearningRoadmap({ activeGroup, setActiveGroup }) {
+  const [open, setOpen] = useState(false);
+  // Only show button when 'de' tab or 'all'
+  const show = activeGroup === 'all' || activeGroup === 'de';
+  if (!show) return null;
+
+  return (
+    <div style={{ marginBottom: 28 }}>
+      {/* Toggle header */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '14px 20px', borderRadius: open ? '16px 16px 0 0' : 16,
+          background: 'linear-gradient(135deg,rgba(139,92,246,.15),rgba(59,130,246,.1))',
+          border: '1px solid rgba(139,92,246,.35)', cursor: 'pointer',
+          transition: 'all 0.25s',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: '1.3rem' }}>🗺️</span>
+          <div style={{ textAlign: 'left' }}>
+            <div style={{ color: '#e2e8f0', fontWeight: 700, fontSize: '0.95rem' }}>
+              เส้นทางเรียน Data Engineering
+            </div>
+            <div style={{ color: '#94a3b8', fontSize: '0.72rem' }}>
+              27 คอร์ส · 5 ระดับ · คลิกเพื่อดูแผนที่การเรียน
+            </div>
+          </div>
+        </div>
+        <span style={{
+          color: '#8b5cf6', fontSize: '0.8rem', fontWeight: 700,
+          transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s',
+          display: 'inline-block',
+        }}>▼</span>
+      </button>
+
+      {/* Roadmap content */}
+      {open && (
+        <div style={{
+          border: '1px solid rgba(139,92,246,.35)', borderTop: 'none',
+          borderRadius: '0 0 16px 16px', padding: '20px 16px 24px',
+          background: 'rgba(13,13,26,0.7)', backdropFilter: 'blur(12px)',
+          overflowX: 'auto',
+        }}>
+          <div style={{
+            display: 'flex', alignItems: 'flex-start', gap: 0,
+            minWidth: 'max-content',
+          }}>
+            {DE_PHASES.map((ph, pi) => (
+              <div key={pi} style={{ display: 'flex', alignItems: 'center' }}>
+                {/* Phase column */}
+                <div style={{ width: 160, flexShrink: 0 }}>
+                  {/* Phase header */}
+                  <div style={{
+                    background: `${ph.color}18`, border: `1.5px solid ${ph.color}55`,
+                    borderRadius: 12, padding: '8px 10px', marginBottom: 10, textAlign: 'center',
+                  }}>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 800, color: ph.color, letterSpacing: '0.04em' }}>
+                      {ph.phase}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#e2e8f0', marginTop: 1 }}>
+                      {ph.label}
+                    </div>
+                    <div style={{ fontSize: '0.63rem', color: '#64748b', marginTop: 1 }}>{ph.sub}</div>
+                  </div>
+
+                  {/* Course nodes */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {ph.courses.map((c, ci) => (
+                      <Link
+                        key={c.id}
+                        href={`/courses/${c.id}`}
+                        onClick={() => setActiveGroup('de')}
+                        style={{ textDecoration: 'none' }}
+                      >
+                        <div style={{
+                          display: 'flex', alignItems: 'center', gap: 7,
+                          padding: '7px 10px', borderRadius: 10,
+                          background: `${ph.color}10`,
+                          border: `1px solid ${ph.color}30`,
+                          transition: 'all 0.18s',
+                          cursor: 'pointer',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.background = `${ph.color}25`;
+                          e.currentTarget.style.borderColor = `${ph.color}70`;
+                          e.currentTarget.style.transform = 'translateX(3px)';
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.background = `${ph.color}10`;
+                          e.currentTarget.style.borderColor = `${ph.color}30`;
+                          e.currentTarget.style.transform = 'none';
+                        }}
+                        >
+                          <span style={{ fontSize: '0.9rem', flexShrink: 0 }}>{c.emoji}</span>
+                          <span style={{
+                            fontSize: '0.71rem', fontWeight: 600, color: '#cbd5e1',
+                            lineHeight: 1.3,
+                          }}>{c.name}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Arrow between phases */}
+                {pi < DE_PHASES.length - 1 && (
+                  <div style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    padding: '0 8px', paddingTop: 40,
+                  }}>
+                    <div style={{
+                      width: 28, height: 2,
+                      background: `linear-gradient(90deg,${ph.color}80,${DE_PHASES[pi+1].color}80)`,
+                    }}/>
+                    <div style={{
+                      width: 0, height: 0,
+                      borderTop: '5px solid transparent',
+                      borderBottom: '5px solid transparent',
+                      borderLeft: `7px solid ${DE_PHASES[pi+1].color}90`,
+                      marginLeft: 2,
+                    }}/>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Legend */}
+          <div style={{
+            marginTop: 16, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)',
+            display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center',
+          }}>
+            {DE_PHASES.map(ph => (
+              <div key={ph.phase} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: ph.color }} />
+                <span style={{ fontSize: '0.65rem', color: '#64748b' }}>{ph.label}</span>
+              </div>
+            ))}
+            <span style={{ fontSize: '0.65rem', color: '#475569' }}>· คลิกที่คอร์สเพื่อเริ่มเรียน</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CoursesPage() {
   const [activeGroup, setActiveGroup] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -337,6 +543,9 @@ export default function CoursesPage() {
           </div>
         ))}
       </div>
+
+      {/* ── DE Learning Roadmap ── */}
+      <DELearningRoadmap activeGroup={activeGroup} setActiveGroup={setActiveGroup} />
 
       {/* Search Bar */}
       <SearchBar onSearch={setSearchQuery} totalCount={filtered.length} />
