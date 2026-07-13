@@ -5,21 +5,21 @@ import { useState } from 'react';
 export default function CourseThumbnail({ course, compact = false }) {
   const { id, emoji, title, levelColor, level, order } = course;
   const [imgErr, setImgErr] = useState(false);
-  const [triedJpg, setTriedJpg] = useState(false);
-  // Try .png first, fall back to .jpg, then emoji
-  const imgSrc = !triedJpg
-    ? `/images/${id}/cover.png`
-    : `/images/${id}/cover.jpg`;
+  const [triedAlt, setTriedAlt] = useState(false);
+
+  // Primary: /images/courses/{id}.png  (flat structure = works on Vercel)
+  // Fallback: /images/courses/{id}.jpg (some old files)
+  const imgSrc = !triedAlt
+    ? `/images/courses/${id}.png`
+    : `/images/courses/${id}.jpg`;
 
   const h = compact ? 110 : undefined;
 
   const handleError = () => {
-    if (!triedJpg) {
-      // First failure: try .jpg version
-      setTriedJpg(true);
+    if (!triedAlt) {
+      setTriedAlt(true);   // try .jpg
     } else {
-      // Both failed: show emoji fallback
-      setImgErr(true);
+      setImgErr(true);     // both failed → emoji
     }
   };
 
