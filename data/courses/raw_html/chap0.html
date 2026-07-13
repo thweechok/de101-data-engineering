@@ -1,0 +1,27 @@
+<h2>บทนำ: การทำงานของเว็บไซต์ (How the Web Works)</h2>
+<p>ยินดีต้อนรับสู่โลกของการพัฒนาเว็บไซต์! ก่อนที่เราจะลงลึกถึงการเขียนโค้ด สิ่งสำคัญคือต้องเข้าใจภาพรวมว่าเว็บไซต์ทำงานอย่างไร เมื่อคุณพิมพ์ URL ลงในเบราว์เซอร์ (Browser) เบราว์เซอร์จะทำหน้าที่เป็น <strong>Client</strong> ส่ง <strong>HTTP Request</strong> ไปยัง <strong>Server</strong> ที่เก็บข้อมูลเว็บไซต์นั้นไว้ จากนั้น Server จะประมวลผลและส่ง <strong>HTTP Response</strong> กลับมา ซึ่งประกอบด้วยไฟล์หลักๆ 3 อย่าง ได้แก่ HTML, CSS และ JavaScript</p>
+
+<h2>โครงสร้างของเว็บไซต์ (The Holy Trinity of Web Development)</h2>
+<p>ในการสร้างเว็บไซต์ เราเปรียบเสมือนการสร้างบ้าน:</p>
+<ul>
+    <li><strong>HTML (HyperText Markup Language):</strong> เปรียบเสมือน <strong>"โครงสร้างและกระดูก"</strong> ของบ้าน มันกำหนดว่าในหน้าเว็บนั้นมีอะไรบ้าง เช่น หัวข้อ, ย่อหน้า, รูปภาพ, หรือลิงก์</li>
+    <li><strong>CSS (Cascading Style Sheets):</strong> เปรียบเสมือน <strong>"ผิวหนังและการตกแต่ง"</strong> ของบ้าน มันกำหนดว่าองค์ประกอบเหล่านั้นมีหน้าตาเป็นอย่างไร สีอะไร ขนาดเท่าไหร่ จัดวางอยู่ตรงไหน</li>
+    <li><strong>JavaScript:</strong> เปรียบเสมือน <strong>"ระบบไฟฟ้าและประปา"</strong> ที่ทำให้บ้านมีชีวิตชีวา ตอบสนองต่อการกระทำของผู้ใช้ได้ (เราจะยังไม่ได้เรียนในคอร์สนี้ แต่เป็นสิ่งที่คุณต้องรู้ในอนาคต)</li>
+</ul>
+
+<h2>ทำไมต้อง HTML และ CSS?</h2>
+<p>HTML และ CSS เป็นพื้นฐานที่หลีกเลี่ยงไม่ได้ ไม่ว่าคุณจะใช้ Framework หรือ Library ล้ำสมัยแค่ไหน เช่น React, Vue, หรือ Angular ท้ายที่สุดแล้วเครื่องมือเหล่านั้นก็ทำหน้าที่ <strong>Render</strong> ผลลัพธ์ออกมาเป็น HTML และ CSS ให้เบราว์เซอร์อ่านอยู่ดี การเข้าใจพื้นฐานอย่างลึกซึ้ง (Core Concepts) จะทำให้คุณสามารถแก้ไขปัญหา (Debug) และสร้าง UI (User Interface) ที่ซับซ้อนได้อย่างมั่นใจ</p>
+
+<h2>เครื่องมือที่ต้องใช้ (Tools of the Trade)</h2>
+<p>ในการเริ่มต้น คุณไม่จำเป็นต้องมีเครื่องมือที่ราคาแพง ทุกอย่างฟรีหมด:</p>
+<ol style="padding-left:20px">
+    <li><strong>Text Editor:</strong> เราแนะนำ <strong>VS Code (Visual Studio Code)</strong> ซึ่งเป็น Editor ที่ได้รับความนิยมสูงสุดในปัจจุบัน มี Extension มากมายที่ช่วยให้เขียนโค้ดได้เร็วขึ้น</li>
+    <li><strong>Web Browser:</strong> <strong>Google Chrome</strong> หรือ <strong>Mozilla Firefox</strong> (เราแนะนำให้ใช้ Chrome เพื่อความสะดวกในการใช้ Chrome DevTools)</li>
+</ol>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> ติดตั้ง Extension ใน VS Code ที่ชื่อว่า <strong>"Live Server"</strong> มันจะช่วยให้คุณจำลอง Local Server และเมื่อคุณกด Save ไฟล์ HTML เบราว์เซอร์ของคุณจะ Refresh อัตโนมัติ (Hot Reload) ประหยัดเวลาไปได้มหาศาล!
+</div>
+
+<h2>สรุปก่อนเริ่มลุย</h2>
+<p>ในบทถัดๆ ไป เราจะเจาะลึก HTML ทีละส่วน ตามด้วย CSS ตั้งแต่พื้นฐานไปจนถึงระดับสูง เช่น Flexbox, Grid และ Responsive Design เป้าหมายของคอร์สนี้คือ "Zero to Hero" ดังนั้นแม้คุณจะไม่เคยเขียนโค้ดมาก่อน ขอแค่มีความตั้งใจ คุณจะสามารถสร้างเว็บไซต์ Portfolio ที่สวยงามด้วยมือของคุณเองได้อย่างแน่นอน!</p>

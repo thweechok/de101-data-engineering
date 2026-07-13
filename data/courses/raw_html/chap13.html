@@ -1,0 +1,30 @@
+<h2>เวลาแสดงฝีมือ! (Time to Build)</h2>
+<p>การเรียนรู้โค้ดจากการอ่านและดูวิดีโอนั้นเทียบไม่ได้เลยกับการ <strong>ลงมือทำโปรเจกต์จริง</strong> ในบทสุดท้ายนี้ เราจะนำความรู้ทั้งหมดตั้งแต่ HTML Semantic Tags, Box Model, Flexbox/Grid, Responsive Design ไปจนถึง CSS Animations มาสร้าง <strong>"เว็บไซต์ Portfolio ของคุณเอง"</strong>!</p>
+
+<h2>โครงสร้างหน้าเว็บ (The Architecture)</h2>
+<p>เว็บไซต์ Portfolio ที่ดีควรดูสะอาด เป็นมืออาชีพ และเล่าเรื่องราวของคุณได้ โครงสร้างพื้นฐานที่เราจะสร้าง (Single Page Application) ประกอบด้วย 4 ส่วนหลัก:</p>
+<ol style="padding-left:20px">
+    <li><strong>Header & Navigation:</strong> แถบเมนูด้านบนแบบ Sticky ขยับตามเมื่อ Scroll มีปุ่มแฮมเบอร์เกอร์ (Hamburger menu) สำหรับมือถือ</li>
+    <li><strong>Hero Section:</strong> ส่วนแรกที่ผู้ใช้เห็นเมื่อโหลดหน้าเว็บ ต้องปัง! ประกอบด้วยรูปภาพของคุณ, ตำแหน่งงาน (เช่น Frontend Developer), และปุ่ม Call to Action (CTA) เช่น "ดูผลงาน" หรือ "โหลด Resume"</li>
+    <li><strong>Projects / Work Experience:</strong> ส่วนแสดงผลงาน จัดวางเลย์เอาต์ด้วย CSS Grid แบบ 3 คอลัมน์ (Desktop) หดเหลือ 1 คอลัมน์ (Mobile) เพิ่มเอฟเฟกต์ <code>:hover</code> ให้การ์ดเด้งขึ้นมาเล็กน้อย (Transform & Transition)</li>
+    <li><strong>Contact & Footer:</strong> ฟอร์มติดต่อ (HTML Forms) และลิงก์ไปยัง GitHub, LinkedIn พร้อมลิขสิทธิ์</li>
+</ol>
+
+<h2>เทคนิคที่นำมาประยุกต์ใช้ในโปรเจกต์</h2>
+<ul>
+    <li>ใช้ <strong>CSS Variables (Custom Properties)</strong> ในการกำหนด Color Palette ตั้งแต่แรก ដើម្បីให้พร้อมสำหรับฟีเจอร์ Dark Mode Toggle ในอนาคต</li>
+    <li>กำหนด <code>scroll-behavior: smooth;</code> ในแท็ก <code>html</code> เพื่อให้เวลาคลิกเมนู แล้วหน้าเว็บค่อยๆ สไลด์ลงมาอย่างนุ่มนวล (ไม่ต้องพึ่ง JavaScript!)</li>
+    <li>ใช้ <strong>Clamp()</strong> สำหรับหัวข้อ (H1) ใน Hero Section เพื่อให้ขนาดฟอนต์ย่อขยายตามขนาดหน้าจออัตโนมัติ (Fluid Typography)</li>
+    <li>ใช้ <strong>Semantic HTML</strong> (เช่น <code>&lt;nav&gt;</code>, <code>&lt;section id="projects"&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;footer&gt;</code>) เพื่อให้หน้าเว็บรองรับ Accessibility และ SEO แย่งอันดับใน Google</li>
+</ul>
+
+<h2>การนำขึ้นใช้งานจริง (Deployment)</h2>
+<p>เขียนโค้ดเสร็จแล้ว ถ้าอยู่แค่ในคอมพิวเตอร์ของคุณก็คงไม่มีใครเห็น! ขั้นตอนสุดท้ายคือการนำเว็บขึ้น <strong>Production (Live URL)</strong> ซึ่งปัจจุบันมีบริการโฮสติ้งฟรี (Free Tier) ที่ดีมากสำหรับเว็บ Static (HTML/CSS/JS):</p>
+<ul>
+    <li><strong>GitHub Pages:</strong> คลาสสิกและทรงพลังที่สุดในวงการ เพียงแค่คุณอัพโหลดโค้ดขึ้น Repository ใน GitHub และเปิดใช้งาน Pages คุณก็จะได้ลิงก์ <code>username.github.io/repo-name</code> ใช้งานฟรีตลอดกาล</li>
+    <li><strong>Vercel หรือ Netlify:</strong> แพลตฟอร์มยุคใหม่ที่ได้รับความนิยมสูงสุด ใช้งานง่ายมาก (Drag & Drop โฟลเดอร์ได้เลย) หรือจะเชื่อมต่อกับ GitHub เพื่อทำ CI/CD (เวลาคุณแก้โค้ดและ Push ขึ้น GitHub เว็บไซต์จะอัพเดตอัตโนมัติในไม่กี่วินาที)</li>
+</ul>
+
+<div class="tip-box">
+    <strong>💡 บทสรุป:</strong> ยินดีด้วย! คุณได้เดินทางจาก "Zero to Hero" ในโลกของ HTML & CSS แล้ว จากนี้ไป การเดินทางของคุณเพิ่งจะเริ่มต้น ขอให้สนุกกับการเขียนโค้ด และอย่าลืมว่า <em>"นักพัฒนาที่เก่งที่สุด ไม่ใช่คนที่จำโค้ดได้ทุกบรรทัด แต่คือคนที่รู้จักวิธีค้นหา (Google/StackOverflow) และประยุกต์ใช้ได้อย่างสร้างสรรค์"</em> ลุยเลย! 🚀
+</div>

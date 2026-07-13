@@ -1,0 +1,53 @@
+<h2>1. เพิ่มชีวิตชีวาและความนุ่มนวลด้วย Transitions</h2>
+<p>ในโลกความเป็นจริง เมื่อเราเปิดประตู หรือกดสวิตช์ไฟ มันไม่ได้เกิดขึ้นในพริบตา 0 วินาที มันต้องใช้เวลา แต่ในโลกของเว็บยุคเก่า การเปลี่ยนแปลงสไตล์อย่างกระทันหัน (เช่น เอาเมาส์ไปชี้ปุ่มแล้วสีเปลี่ยนสลับทันที) มักทำให้ผู้ใช้รู้สึกแข็งกระด้าง <strong>CSS Transitions</strong> คือเครื่องมือที่เข้ามาแก้ปัญหานี้ โดยช่วยให้การเปลี่ยนแปลงค่าระหว่าง 2 สถานะ (State) เกิดขึ้นอย่างค่อยเป็นค่อยไป (Interpolation) ทำให้เว็บไซต์ดูพรีเมียมและเป็นธรรมชาติขึ้นมาก</p>
+
+<p>การใช้ Transition จะต้องประกอบด้วยส่วนสำคัญ 4 อย่าง (มักเขียนรวบยอดแบบ Shorthand):</p>
+<ol style="padding-left:20px">
+  <li><strong>transition-property:</strong> เลือกสิ่งที่จะให้ทำแอนิเมชัน เช่น <code>background-color</code>, <code>transform</code> หรือ <code>all</code> (เปลี่ยนทุกอย่าง)</li>
+  <li><strong>transition-duration:</strong> ระยะเวลาที่ใช้ตั้งแต่ต้นจนจบ เช่น <code>0.3s</code> (0.3 วินาที) หรือ <code>300ms</code></li>
+  <li><strong>transition-timing-function:</strong> อัตราเร่งของเวลา (เช่น <code>ease-in</code> เริ่มต้นช้าแล้วพุ่งเร็ว, <code>ease-out</code> เริ่มเร็วแล้วค่อยๆ เบรก, <code>linear</code> ความเร็วคงที่)</li>
+  <li><strong>transition-delay:</strong> รอกี่วินาทีก่อนที่จะเริ่มแสดงผล (หน่วงเวลา)</li>
+</ol>
+<pre>
+.btn {
+  background-color: blue;
+  /* แบบย่อ: property | duration | timing-function | delay */
+  transition: background-color 0.3s ease-in-out;
+}
+.btn:hover {
+  background-color: red; /* เมื่อเมาส์ชี้ สีจะค่อยๆ ละลายเปลี่ยนเป็นแดงในเวลา 0.3 วินาที */
+}
+</pre>
+
+<h2>2. ศาสตร์แห่งการแปลงโฉมเรขาคณิต (CSS Transform)</h2>
+<p><code>transform</code> คือ Property ที่ยอดเยี่ยมที่สุดสำหรับการขยับ, ย่อ, ขยาย, หมุน หรือบิด Element จุดเด่นที่ทำให้มันเหนือกว่าการเปลี่ยนค่าแบบอื่นคือ <strong>มันไม่ส่งผลกระทบต่อ Layout (Normal Flow) ของคนอื่นรอบข้าง</strong> (ถ้าคุณขยายขนาดกล่องด้วย transform กล่องข้างๆ จะไม่โดนเบียด) และที่สำคัญ มันถูกประมวลผลโดยตรงด้วยการ์ดจอ (Hardware Accelerated) ทำให้การแสดงผลลื่นไหลมาก (ถึง 60fps) ฟังก์ชันที่ใช้บ่อยได้แก่:</p>
+<ul>
+  <li><code>translate(x, y)</code>: เลื่อนตำแหน่งไปตามแกน X และ Y (เช่น ทำแอนิเมชันปุ่มเด้ง, หรือ Modal เลื่อนหล่นลงมาจากฟ้า)</li>
+  <li><code>scale(x, y)</code>: ย่อหรือขยายขนาดสัดส่วน (เช่น <code>scale(1.1)</code> คือการขยายขึ้น 10% จากเดิม)</li>
+  <li><code>rotate(deg)</code>: หมุนเป็นองศา (เช่น <code>rotate(45deg)</code>, <code>rotate(1turn)</code>)</li>
+</ul>
+
+<h2>3. @keyframes: ก้าวข้ามขีดจำกัดด้วย Animations</h2>
+<p>แม้ Transitions จะดี แต่ก็มีข้อจำกัดตรงที่ "มันต้องการเหตุการณ์มากระตุ้น" (เช่น ต้องมี <code>:hover</code>) และมันขยับได้แค่ 2 สเต็ป คือจาก A ไป B แต่ถ้าเราต้องการทำแอนิเมชันที่ซับซ้อน, เล่นเองอัตโนมัติตั้งแต่โหลดเว็บเสร็จ, และมีหลายจังหวะ เราจะต้องขยับไปใช้ <strong>CSS Animations คู่กับ @keyframes</strong></p>
+
+<p><strong>@keyframes</strong> คือการกำหนดจุดย่อยๆ ของเวลา (Timeline) เราสามารถบอกได้อย่างละเอียดว่าที่ 0% (เริ่มต้น) ให้ทำอะไร ที่ 50% ให้เปลี่ยนเป็นอะไร และ 100% ให้จบอย่างไร</p>
+<pre>
+/* 1. สร้าง Keyframes (บทบาทสมมติ) ตั้งชื่อว่า 'bounce' */
+@keyframes bounce {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-20px); } /* จังหวะกลาง: กระโดดลอยขึ้นไป 20px */
+  100% { transform: translateY(0); } /* จบ: ตกกลับลงมาที่เดิม */
+}
+
+/* 2. เรียกใช้งานด้วย property 'animation' */
+.loading-ball {
+  /* ชื่อบทบาท | ระยะเวลา | อัตราเร่ง | หน่วงเวลา | จำนวนรอบ (infinite คือวนลูปตลอดไป) */
+  animation: bounce 1s ease-in-out infinite; 
+}
+</pre>
+
+<div class="tip-box">
+  <strong>💡 Performance Tip: เคล็ดลับความลื่นไหล</strong>
+  กฎเหล็กของการทำแอนิเมชันบนเว็บที่ดี <strong>ห้าม!</strong> ไปทำ transition หรือ animate กับ property ที่เปลี่ยนขนาดกล่องหรือตำแหน่งจริงๆ เช่น <code>width</code>, <code>height</code>, <code>margin</code>, <code>top</code>, <code>left</code> เด็ดขาด เพราะการเปลี่ยนค่าเหล่านี้จะบังคับให้เบราว์เซอร์คำนวณ Layout ของเว็บใหม่ทั้งหมดในทุกๆ เฟรม ทำให้หน้าเว็บกระตุก (Jank) อย่างรุนแรง <br>
+  ให้ใช้แค่ <strong>transform (translate, scale, rotate)</strong> และ <strong>opacity</strong> (ความโปร่งใส) เท่านั้น! เพราะ 2 ตัวนี้เป็น Compositor Properties ที่เบราว์เซอร์ส่งไปให้ GPU วาดภาพให้โดยตรง
+</div>

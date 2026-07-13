@@ -1,0 +1,62 @@
+<h2>1. พื้นฐานของ CSS (CSS Fundamentals)</h2>
+<p><strong>CSS (Cascading Style Sheets)</strong> คือเวทมนตร์ที่เปลี่ยนเอกสาร HTML ธรรมดาๆ ให้กลายเป็นเว็บไซต์ที่สวยงามน่าดึงดูด กฎพื้นฐานของการเขียน CSS ประกอบด้วย 2 ส่วนหลักคือ <strong>Selector</strong> (ตัวระบุว่าเราต้องการเลือกตกแต่งองค์ประกอบไหน) และ <strong>Declaration Block</strong> (กลุ่มของคำสั่งสไตล์ที่จะนำไปใช้ ซึ่งครอบด้วยปีกกา <code>{}</code>)</p>
+<pre>
+selector {
+  property: value; /* Declaration */
+  color: blue;
+}
+</pre>
+
+<h2>2. Selectors (การเลือก Element ที่ต้องการตกแต่ง)</h2>
+<p>การจะตกแต่งเว็บให้แม่นยำ คุณต้องรู้จักวิธีเลือก (Select) สิ่งที่ถูกต้อง CSS มี Selector หลายประเภทให้ใช้งาน:</p>
+<ol style="padding-left:20px">
+  <li><strong>Type Selector (Tag Selector):</strong> เลือกตามชื่อแท็ก HTML โดยตรง จะมีผลกับทุกแท็กนั้นบนหน้าเว็บ
+    <pre>h1 { color: red; }</pre>
+  </li>
+  <li><strong>Class Selector:</strong> เลือกตามชื่อ Class โดยใช้เครื่องหมายจุด <code>.</code> นำหน้า <strong>(นิยมใช้มากที่สุด)</strong> เพราะเราสามารถกำหนด Class ให้กับกี่ Element ก็ได้ และนำกลับมาใช้ซ้ำ (Reusable) ได้ง่าย
+    <pre>.btn-primary { background-color: blue; color: white; }</pre>
+  </li>
+  <li><strong>ID Selector:</strong> เลือกตามชื่อ ID โดยใช้เครื่องหมายชาร์ป <code>#</code> นำหน้า <strong>(ควรมีอันเดียวในหน้าเว็บ)</strong> นิยมใช้สำหรับโครงสร้างหลักหรือจุดที่ต้องการระบุแบบเฉพาะเจาะจงขั้นสุด
+    <pre>#main-header { padding: 20px; }</pre>
+  </li>
+  <li><strong>Attribute Selector:</strong> เลือก Element ที่มี Attribute ตามที่กำหนด
+    <pre>input[type="text"] { border: 1px solid gray; }</pre>
+  </li>
+</ol>
+
+<h2>3. Specificity (ความเฉพาะเจาะจง - กฎการต่อสู้ของ CSS)</h2>
+<p>เมื่อคุณเขียน CSS โครงการใหญ่ๆ คุณมักจะเจอปัญหาว่า <em>"ทำไมสไตล์ที่ฉันเขียนถึงไม่แสดงผล?"</em> สาเหตุหลักมาจาก <strong>Specificity</strong> หากมีกฎ CSS หลายข้อพยายามเขียนทับ (Overwrite) สไตล์ของ Element เดียวกัน เบราว์เซอร์จะคำนวณคะแนนความเฉพาะเจาะจงเพื่อตัดสินว่ากฎไหนจะเป็นผู้ชนะ</p>
+<p>ลำดับความสำคัญจากมากไปน้อย (คะแนนคร่าวๆ):</p>
+<ul>
+  <li><strong>Inline Style</strong> (เขียนแทรกในแท็ก HTML: <code>style="..."</code>) -> ชนะทุกอย่าง (ยกเว้น !important)</li>
+  <li><strong>ID Selector</strong> (<code>#id</code>) -> คะแนนสูงมาก</li>
+  <li><strong>Class Selector</strong>, <strong>Pseudo-class</strong> (<code>.class</code>, <code>:hover</code>) -> คะแนนปานกลาง</li>
+  <li><strong>Type Selector</strong> (<code>h1</code>, <code>p</code>) -> คะแนนต่ำสุด</li>
+</ul>
+<p>หากคะแนนเท่ากัน เบราว์เซอร์จะเลือกกฎที่ <strong>เขียนอยู่ล่างสุด (ลำดับสุดท้าย)</strong> ตามความหมายของคำว่า "Cascading" (น้ำตกที่ไหลจากบนลงล่าง)</p>
+
+<div class="tip-box">
+  <strong>💡 Pro Tip: การใช้ !important</strong>
+  คุณสามารถเติม <code>!important</code> ไว้หลัง value (เช่น <code>color: red !important;</code>) เพื่อบังคับให้กฎนี้ชนะทุกสิ่ง อย่างไรก็ตาม <strong>ควรหลีกเลี่ยงการใช้ !important ให้มากที่สุด</strong> เพราะมันจะทำลายระบบ Cascading และทำให้โค้ดแก้บัค (Debug) ยากในอนาคต ให้ใช้วิธีเพิ่ม Class หรือแก้ไข Specificity ให้ถูกต้องจะดีกว่า
+</div>
+
+<h2>4. Inheritance (การสืบทอดคุณสมบัติ)</h2>
+<p>ใน CSS Property (คุณสมบัติ) บางอย่างจะถูก <strong>สืบทอด (Inherit)</strong> จาก Element พ่อแม่ (Parent) ไปยัง Element ลูก (Child) โดยอัตโนมัติ คุณสมบัติที่มักจะถูกสืบทอดจะเป็นพวก <strong>Typography (ตัวอักษร)</strong> เช่น <code>color</code>, <code>font-family</code>, <code>font-size</code>, <code>line-height</code></p>
+<p>ส่วน Property ที่เกี่ยวกับการจัดวาง เช่น <code>margin</code>, <code>padding</code>, <code>border</code>, <code>background</code> จะ <strong>ไม่ถูกสืบทอด</strong> เพราะมันคงจะวุ่นวายมากถ้าคุณใส่ขอบ (Border) ให้คอนเทนเนอร์หลัก แล้วปุ่มทุกปุ่มข้างในได้ขอบนั้นไปด้วย</p>
+
+<h2>5. Colors และ Typography (สีสันและตัวอักษร)</h2>
+<p><strong>การกำหนดสี (Colors)</strong> ใน CSS สามารถทำได้หลายวิธี:</p>
+<ul>
+  <li><strong>Keyword:</strong> ใช้ชื่อสีตรงๆ เช่น <code>red</code>, <code>blue</code>, <code>transparent</code> (โปร่งใส)</li>
+  <li><strong>HEX Code:</strong> รหัสสีฐาน 16 (ขึ้นต้นด้วย #) เช่น <code>#FF0000</code> นิยมใช้มากที่สุดในดีไซน์</li>
+  <li><strong>RGB / RGBA:</strong> การผสมสีแดง เขียว น้ำเงิน (0-255) โดยมีตัว A (Alpha) ควบคุมความโปร่งแสง (Opacity) เช่น <code>rgba(0, 0, 0, 0.5)</code> คือสีดำโปร่งแสง 50%</li>
+  <li><strong>HSL:</strong> Hue, Saturation, Lightness การกำหนดสีตามวงล้อสี เหมาะสำหรับการทำไล่เฉดสี</li>
+</ul>
+<p><strong>การจัดการตัวอักษร (Typography)</strong> Properties ที่สำคัญที่สุดมีดังนี้:</p>
+<ul>
+  <li><code>font-family</code>: กำหนดตระกูลฟอนต์ ควรมีฟอนต์สำรอง (Fallback) เสมอ เช่น <code>font-family: 'Helvetica', Arial, sans-serif;</code></li>
+  <li><code>font-size</code>: กำหนดขนาด สามารถใช้หน่วย <code>px</code>, <code>em</code>, หรือ <code>rem</code></li>
+  <li><code>font-weight</code>: ความหนาของฟอนต์ ค่าเริ่มต้นคือ 400 ส่วนตัวหนา (bold) คือ 700</li>
+  <li><code>line-height</code>: ความสูงของบรรทัด (ระยะห่างระหว่างบรรทัด) เพื่อความอ่านง่าย ควรตั้งค่าไว้ที่ประมาณ <code>1.5</code> หรือ <code>1.6</code> สำหรับข้อความเนื้อหาทั่วไป</li>
+  <li><code>text-align</code>: จัดตำแหน่งข้อความ (left, center, right, justify)</li>
+</ul>

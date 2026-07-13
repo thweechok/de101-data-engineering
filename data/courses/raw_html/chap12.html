@@ -1,0 +1,45 @@
+<h2>วิวัฒนาการของการเขียน CSS</h2>
+<p>เมื่อโปรเจกต์มีขนาดใหญ่ขึ้น การเขียน CSS แบบธรรมดา (Vanilla CSS) ในไฟล์เดียวจะเริ่มจัดการยาก (เกิดปัญหา Class Name ชนกัน, โค้ดซ้ำซ้อน, ไฟล์ใหญ่เกินไป) วงการ Web Development จึงได้พัฒนา <strong>แนวคิดและเครื่องมือ (Frameworks / Methodologies)</strong> ต่างๆ เพื่อแก้ปัญหานี้</p>
+
+<h2>1. Component-Based Frameworks (เช่น Bootstrap)</h2>
+<p>ในอดีต (และยังใช้อยู่ในงานองค์กร) Framework อย่าง <strong>Bootstrap</strong> หรือ <strong>Foundation</strong> เป็นที่นิยมมาก พวกเขาเตรียมคลาสสำเร็จรูปมาให้คุณ เช่น <code>btn btn-primary</code> เพียงแค่คุณใส่คลาสเหล่านี้ คุณก็จะได้ปุ่มที่สวยงามพร้อมใช้งานทันที</p>
+<ul>
+    <li><strong>ข้อดี:</strong> สร้างเว็บได้เร็วมาก เหมาะสำหรับงานที่ต้องการความไว (MVP) หรือหน้า Dashboard Admin</li>
+    <li><strong>ข้อเสีย:</strong> เว็บมักจะมีหน้าตา "คล้ายๆ กันหมด" (Bootstrap look), ไฟล์ใหญ่โหลดหนัก (ถ้าไม่ได้ทำ Purge), และการปรับแต่งดีไซน์ให้ฉีกแนวทำได้ยากเพราะต้องไปเขียน CSS ทับ (Override) กฎที่มีความสำคัญสูง (Specificity)</li>
+</ul>
+
+<h2>2. Utility-First Frameworks (เช่น Tailwind CSS)</h2>
+<p>นี่คือ <strong>พระเอกของยุคปัจจุบัน!</strong> Tailwind CSS เปลี่ยนแนวคิดใหม่ แทนที่จะให้ Component สำเร็จรูป มันให้ "Utility Classes" เล็กๆ (เช่น <code>text-center</code>, <code>p-4</code>, <code>bg-blue-500</code>, <code>flex</code>) คุณสามารถประกอบคลาสเหล่านี้เพื่อสร้างดีไซน์อะไรก็ได้ โดยแทบไม่ต้องเปิดไฟล์ CSS เลย!</p>
+<pre>&lt;!-- ตัวอย่างการสร้างปุ่มด้วย Tailwind CSS --&gt;
+&lt;button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"&gt;
+  ปุ่มสุดเท่
+&lt;/button&gt;</pre>
+<ul>
+    <li><strong>ข้อดี:</strong> พัฒนาได้รวดเร็วระดับแสง, ไม่ต้องตั้งชื่อ Class ให้ปวดหัว, ไม่เกิดปัญหา Dead CSS (คลาสขยะตกค้าง), ไฟล์เล็กลงมากเมื่อขึ้น Production</li>
+    <li><strong>ข้อเสีย:</strong> โค้ด HTML จะดูรกมาก (Class Soup) และต้องใช้เวลาจำชื่อคลาสในช่วงแรก (Learning Curve)</li>
+</ul>
+
+<h2>3. CSS Methodologies (BEM)</h2>
+<p>หากคุณยังต้องเขียน Vanilla CSS ในทีมใหญ่ การตั้งชื่อคลาสคือฝันร้าย <strong>BEM (Block Element Modifier)</strong> คือระบบการตั้งชื่อคลาสที่เป็นมาตรฐานโลก:</p>
+<pre>/* Block (ตัวหลัก) */
+.card { }
+
+/* Element (ลูกของ Block คั่นด้วย __ ) */
+.card__image { }
+.card__title { }
+
+/* Modifier (สถานะหรือรูปแบบเสริม คั่นด้วย -- ) */
+.card--featured { border: 2px solid gold; }</pre>
+<p>การเขียนแบบ BEM ทำให้ Specificity แบนราบ (มีค่าเท่ากันหมด) และรู้ทันทีว่าคลาสนี้ทำหน้าที่อะไร อยู่ตรงไหน</p>
+
+<h2>4. ยุคแห่ง JavaScript: CSS Modules & CSS-in-JS</h2>
+<p>เมื่อเราก้าวเข้าสู่ยุคของ React / Vue ปัญหา "คลาสชนกัน" ถูกแก้ด้วย:</p>
+<ul>
+    <li><strong>CSS Modules:</strong> เขียน CSS ปกติ แต่ตอน Build ระบบจะสุ่มชื่อคลาสให้ (เช่น <code>.title_x8f9a</code>) รับประกันว่าไม่มีทางชนกับหน้าอื่น</li>
+    <li><strong>CSS-in-JS (เช่น Styled Components):</strong> เขียนโค้ด CSS เข้าไปในไฟล์ JavaScript/React เลย! ทำให้คอมโพเนนต์เก็บทั้ง Logic, HTML, และ CSS ไว้ในไฟล์เดียวกันแบบจบในตัว</li>
+</ul>
+
+<div class="tip-box">
+    <strong>💡 จะเลือกใช้อะไรดี?</strong><br>
+    สำหรับผู้เริ่มต้น: <strong>เรียนรู้ Vanilla CSS ให้แน่นที่สุดก่อน!</strong> อย่าเพิ่งรีบข้ามไป Framework เพราะ Tailwind หรือ Bootstrap ล้วนเป็นแค่ "ชื่อย่อ" ของ CSS พื้นฐาน (ถ้าคุณไม่เข้าใจ Flexbox ต่อให้ใช้คลาส <code>flex</code> ของ Tailwind คุณก็จัด Layout ไม่รอดอยู่ดี) เมื่อพื้นฐานแน่นแล้ว <strong>Tailwind CSS</strong> คือสกิลที่ต้องมีใน Resume ในยุคนี้!
+</div>

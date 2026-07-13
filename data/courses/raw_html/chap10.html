@@ -1,0 +1,56 @@
+<h2>ก้าวเข้าสู่ยุคใหม่ของ CSS (Modern CSS Features)</h2>
+<p>ภาษา CSS มีการพัฒนาอย่างก้าวกระโดดในช่วงไม่กี่ปีที่ผ่านมา ฟีเจอร์หลายอย่างที่ในอดีตเราต้องพึ่งพา Pre-processor อย่าง Sass หรือต้องใช้ JavaScript เข้ามาช่วย ตอนนี้เบราว์เซอร์สามารถทำแบบ Native ได้แล้ว! นี่คือฟีเจอร์เด่นที่คุณต้องรู้จักเพื่อเขียนโค้ดได้ทันสมัยขึ้น</p>
+
+<h2>Native CSS Nesting</h2>
+<p>ก่อนหน้านี้ การจะเขียน CSS ซ้อนกัน (Nesting) เราต้องใช้ SCSS (Sass) แต่วันนี้ CSS มาตรฐานรองรับแล้ว! มันช่วยลดการเขียนคลาสซ้ำๆ และทำให้โค้ดอ่านง่ายตามโครงสร้าง HTML:</p>
+<pre>/* แบบเดิม (Old way) */
+.card { background: white; }
+.card .title { font-size: 20px; }
+.card:hover { transform: scale(1.05); }
+
+/* แบบใหม่ (CSS Nesting) */
+.card {
+    background: white;
+    
+    .title {
+        font-size: 20px;
+    }
+    
+    &amp;:hover {
+        transform: scale(1.05);
+    }
+}</pre>
+
+<h2>Pseudo-class ทรงพลัง: :is() และ :where()</h2>
+<p>สองฟังก์ชันนี้ช่วยลดการเขียน Selectors ยาวๆ ซ้ำซ้อน:</p>
+<pre>/* แทนที่จะเขียน: */
+header h1, header h2, header h3,
+footer h1, footer h2, footer h3 { color: #333; }
+
+/* เราสามารถย่อได้เป็น: */
+:is(header, footer) :is(h1, h2, h3) { color: #333; }</pre>
+<p><strong>ความแตกต่าง:</strong> <code>:is()</code> จะคำนวณ Specificity ตามตัวที่สูงที่สุดในวงเล็บ ส่วน <code>:where()</code> จะมี Specificity เป็น 0 เสมอ (ทำให้เขียนทับได้ง่ายมาก)</p>
+
+<h2>The Parent Selector: :has()</h2>
+<p>นี่คือ <strong>"Game Changer"</strong> ที่วงการ CSS รอคอยมา 20 ปี! <code>:has()</code> ทำให้เราสามารถสไตล์ "กล่องแม่" โดยอิงจาก "กล่องลูก" ที่อยู่ข้างในได้ (ซึ่งอดีตต้องใช้ JS เท่านั้น)</p>
+<pre>/* ถ้า .card มีรูปภาพ (.card-img) อยู่ข้างใน ให้เซ็ต padding เป็น 0 */
+.card:has(.card-img) {
+    padding: 0;
+}
+
+/* ถ้า .form-group มี input ที่ required อยู่ข้างใน ให้แสดงดอกจันสีแดงหลัง label */
+.form-group:has(input:required) label::after {
+    content: "*";
+    color: red;
+}</pre>
+
+<h2>ฟีเจอร์ UI สุดคูล: Scroll Snap และ Aspect Ratio</h2>
+<ul>
+    <li><strong>CSS Scroll Snap:</strong> สร้างประสบการณ์การเลื่อนจอแบบ "ล็อกทีละหน้า" (คล้ายๆ TikTok หรือ Instagram Reels) ด้วย CSS ล้วนๆ โดยใส่ <code>scroll-snap-type: y mandatory;</code> ที่กล่องแม่ และ <code>scroll-snap-align: start;</code> ที่กล่องลูก</li>
+    <li><strong>Aspect Ratio:</strong> กำหนดสัดส่วนของกล่องอย่างง่ายดาย ไม่ต้องแฮ็กด้วย padding อีกต่อไป เช่น วิดีโอ 16:9 ก็แค่เขียน <code>aspect-ratio: 16 / 9;</code></li>
+    <li><strong>Backdrop-filter:</strong> สร้างเอฟเฟกต์ "กระจกฝ้า" (Glassmorphism) สไตล์ iOS โดยใช้ <code>backdrop-filter: blur(10px);</code> (ต้องใช้คู่กับพื้นหลังแบบโปร่งแสง)</li>
+</ul>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> เนื่องจากฟีเจอร์เหล่านี้ยังค่อนข้างใหม่ (โดยเฉพาะ <code>:has()</code>) ควรเช็คความเข้ากันได้ของเบราว์เซอร์ที่เว็บไซต์ <strong>caniuse.com</strong> เสมอ ก่อนนำไปใช้ในโปรเจกต์งานจริง เพื่อให้แน่ใจว่าผู้ใช้ส่วนใหญ่จะเห็นเว็บอย่างที่คุณตั้งใจ
+</div>

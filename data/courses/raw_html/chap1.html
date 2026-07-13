@@ -1,0 +1,55 @@
+<h2>โครงสร้างพื้นฐานของเอกสาร HTML</h2>
+<p>ไฟล์ HTML ทุกไฟล์ต้องมีโครงสร้างพื้นฐานที่เบราว์เซอร์คาดหวัง เพื่อให้สามารถประมวลผลและแสดงผลได้อย่างถูกต้อง ลองดูโครงสร้างพื้นฐานนี้ (หรือที่เรียกว่า Boilerplate):</p>
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="th"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My First Webpage&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- เนื้อหาเว็บจะอยู่ที่นี่ --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<ul>
+    <li><code>&lt;!DOCTYPE html&gt;</code>: ประกาศให้เบราว์เซอร์รู้ว่านี่คือ HTML5</li>
+    <li><code>&lt;html&gt;</code>: Root element ครอบทุกสิ่งในหน้าเว็บ</li>
+    <li><code>&lt;head&gt;</code>: ส่วนที่เก็บ Meta data เช่น title, charset และลิงก์ไปยังไฟล์ CSS</li>
+    <li><code>&lt;body&gt;</code>: ส่วนที่เก็บเนื้อหาทั้งหมดที่ผู้ใช้มองเห็น</li>
+</ul>
+
+<h2>Tags, Elements และ Attributes</h2>
+<p><strong>HTML Tag</strong> คือคำสั่งที่ใช้บอกเบราว์เซอร์ว่าเนื้อหาส่วนนั้นคืออะไร มักมาเป็นคู่คือ <strong>Opening Tag</strong> และ <strong>Closing Tag</strong> (เช่น <code>&lt;p&gt;...&lt;/p&gt;</code>) แต่บาง Tag ก็ไม่มีคู่ เรียกว่า Self-closing tags (เช่น <code>&lt;img /&gt;</code>, <code>&lt;br /&gt;</code>)</p>
+<p><strong>HTML Element</strong> คือส่วนประกอบทั้งหมดตั้งแต่ Opening Tag, Content ไปจนถึง Closing Tag</p>
+<p><strong>Attributes</strong> คือคุณสมบัติพิเศษที่ใส่เพิ่มใน Opening Tag เพื่อให้ข้อมูลเพิ่มเติม ตัวอย่างเช่น:</p>
+<pre>&lt;a href="https://example.com" target="_blank" class="my-link"&gt;Click me!&lt;/a&gt;</pre>
+<p>ในตัวอย่างนี้ <code>href</code>, <code>target</code>, และ <code>class</code> คือ Attributes</p>
+
+<h2>Semantic HTML: เขียนโค้ดให้มีความหมาย</h2>
+<p>ในยุคก่อน ผู้คนมักใช้ <code>&lt;div&gt;</code> ครอบทุกอย่าง (Div Soup) แต่ใน HTML5 เรามี Semantic Tags ที่สื่อความหมายชัดเจนว่าแต่ละส่วนคืออะไร ซึ่งดีต่อ <strong>SEO (Search Engine Optimization)</strong> และ <strong>Accessibility (การเข้าถึงสำหรับผู้พิการ)</strong>:</p>
+<ol style="padding-left:20px">
+    <li><code>&lt;header&gt;</code>: ส่วนหัวของหน้าเว็บ มักมีโลโก้หรือเมนูนำทาง</li>
+    <li><code>&lt;nav&gt;</code>: ส่วน Navigation หรือเมนูหลักของเว็บ</li>
+    <li><code>&lt;main&gt;</code>: เนื้อหาหลักของหน้า (ควรมีแค่ตัวเดียวต่อหน้า)</li>
+    <li><code>&lt;article&gt;</code>: เนื้อหาที่สมบูรณ์ในตัวเอง สามารถนำไปใช้ที่อื่นได้ (เช่น บทความบล็อก)</li>
+    <li><code>&lt;section&gt;</code>: แบ่งเนื้อหาเป็นส่วนๆ ตามหัวเรื่อง</li>
+    <li><code>&lt;aside&gt;</code>: เนื้อหาเสริม ด้านข้าง หรือโฆษณา</li>
+    <li><code>&lt;footer&gt;</code>: ส่วนท้ายของเว็บ มักมีลิขสิทธิ์หรือลิงก์เสริม</li>
+</ol>
+
+<h2>Forms และ Inputs: การรับข้อมูลจากผู้ใช้</h2>
+<p>ฟอร์ม (Form) เป็นหัวใจสำคัญของการปฏิสัมพันธ์บนเว็บ (Interactive) เช่น หน้า Login หรือ สมัครสมาชิก โครงสร้างฟอร์มพื้นฐานประกอบด้วย <code>&lt;form&gt;</code> และ input ประเภทต่างๆ:</p>
+<pre>&lt;form action="/submit" method="POST"&gt;
+    &lt;label for="username"&gt;ชื่อผู้ใช้:&lt;/label&gt;
+    &lt;input type="text" id="username" name="user" required&gt;
+    
+    &lt;label for="email"&gt;อีเมล:&lt;/label&gt;
+    &lt;input type="email" id="email" name="email" required&gt;
+    
+    &lt;button type="submit"&gt;ลงทะเบียน&lt;/button&gt;
+&lt;/form&gt;</pre>
+<p>ประเภทของ Input ที่ควรรู้จัก: <code>text</code>, <code>password</code>, <code>email</code>, <code>number</code>, <code>checkbox</code>, <code>radio</code>, <code>date</code>, และ <code>file</code></p>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> การใช้ Attribute <code>for</code> ใน <code>&lt;label&gt;</code> ให้ตรงกับ <code>id</code> ของ <code>&lt;input&gt;</code> จะทำให้ผู้ใช้สามารถคลิกที่ข้อความ label เพื่อเลือก input นั้นได้เลย เพิ่มประสบการณ์ผู้ใช้ (UX) ได้อย่างมาก โดยเฉพาะในโทรศัพท์มือถือ!
+</div>

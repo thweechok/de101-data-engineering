@@ -1,0 +1,43 @@
+<h2>Web Accessibility (a11y) คืออะไร?</h2>
+<p>คำว่า <strong>Accessibility</strong> (มักย่อว่า <strong>a11y</strong> เพราะมี 11 ตัวอักษรระหว่าง a กับ y) หมายถึง "การเข้าถึงได้" หรือการออกแบบและพัฒนาเว็บไซต์ให้ <strong>ทุกคน</strong> สามารถใช้งานได้ ไม่ว่าจะเป็นผู้ที่มีสายตาปกติ, ผู้ที่มีความบกพร่องทางการมองเห็น (ต้องใช้โปรแกรม Screen Reader อ่านหน้าเว็บให้ฟัง), ผู้ที่ไม่สามารถใช้เมาส์ได้ (ต้องใช้คีย์บอร์ดอย่างเดียว), หรือผู้ที่มีภาวะตาบอดสี</p>
+<p>การทำ a11y ไม่ได้เป็นเพียงแค่ "ความรับผิดชอบต่อสังคม" แต่ในหลายประเทศมีกฎหมายบังคับ และ Google ก็ให้คะแนน SEO กับเว็บไซต์ที่รองรับ a11y ดีกว่าด้วย!</p>
+
+<h2>Semantic HTML คือก้าวแรกที่ดีที่สุด</h2>
+<p>อย่างที่เราได้เรียนไปในบทที่ 1 การใช้ Semantic Tags เช่น <code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, หรือ <code>&lt;main&gt;</code> แทนการใช้ <code>&lt;div&gt;</code> ล้วนๆ คือการทำ a11y ที่ดีที่สุด เบราว์เซอร์และ Screen Reader จะรู้ทันทีว่าปุ่มคือปุ่ม และรองรับการกดด้วยปุ่ม Enter/Spacebar บนคีย์บอร์ดโดยอัตโนมัติ</p>
+
+<h2>Alt Text สำหรับรูปภาพ</h2>
+<p>ทุกครั้งที่ใส่รูปภาพด้วยแท็ก <code>&lt;img&gt;</code> คุณ <strong>ต้อง</strong> ใส่แอตทริบิวต์ <code>alt</code> เสมอ</p>
+<pre>&lt;!-- ดี: อธิบายว่ารูปคืออะไร เพื่อให้โปรแกรมอ่านให้คนตาบอดฟัง --&gt;
+&lt;img src="dog.jpg" alt="สุนัขพันธุ์โกลเด้น รีทรีฟเวอร์กำลังคาบจานร่อน"&gt;
+
+&lt;!-- หากเป็นแค่รูปตกแต่งที่ไม่มีความหมาย ให้ใส่ alt ว่างๆ ไว้ --&gt;
+&lt;img src="decorative-line.png" alt=""&gt;</pre>
+
+<h2>Color Contrast (ความเปรียบต่างของสี)</h2>
+<p>สีตัวอักษรและสีพื้นหลังต้องมีความแตกต่างกันมากพอ เพื่อให้ผู้ที่มีสายตาเลือนราง หรือคนที่ใช้งานกลางแดดจ้าสามารถอ่านออกได้ มาตรฐาน WCAG (Web Content Accessibility Guidelines) กำหนดว่า Text ทั่วไปควรมีอัตราส่วน Contrast อย่างน้อย <strong>4.5:1</strong> คุณสามารถใช้เครื่องมือใน Chrome DevTools หรือเว็บตรวจ Contrast Checker ออนไลน์เพื่อทดสอบสีของคุณได้</p>
+
+<h2>Keyboard Navigation และ Focus Management</h2>
+<p>ผู้ใช้จำนวนมาก (รวมถึง Power Users) ท่องเว็บด้วยปุ่ม Tab บนคีย์บอร์ด เมื่อผู้ใช้กด Tab ไปที่ลิงก์หรือปุ่ม <strong>ต้องมีกรอบแสดงให้เห็นชัดเจนว่าโฟกัสอยู่ที่ไหน</strong> (Focus Ring)</p>
+<pre>/* อย่าทำแบบนี้เด็ดขาด! มันทำลาย a11y ของผู้ใช้คีย์บอร์ด */
+button:focus, a:focus {
+    outline: none; 
+}
+
+/* ถ้าจะเอา outline ออก ต้องใส่สไตล์อื่นทดแทนให้ชัดเจน */
+button:focus-visible {
+    outline: 3px solid #3498db;
+    outline-offset: 2px;
+}</pre>
+<p>หมายเหตุ: เราใช้ <code>:focus-visible</code> (ฟีเจอร์ใหม่) แทน <code>:focus</code> เพราะมันจะแสดงกรอบเฉพาะเวลาใช้คีย์บอร์ดกดเท่านั้น ถ้าคลิกด้วยเมาส์จะไม่ขึ้นกรอบรบกวนสายตา</p>
+
+<h2>ARIA Roles (WAI-ARIA)</h2>
+<p>บางครั้งเราต้องสร้าง UI ที่ซับซ้อนซึ่งไม่มี HTML tag รองรับโดยตรง (เช่น Custom Dropdown หรือ Modal) เราสามารถใช้ ARIA (Accessible Rich Internet Applications) attributes เพื่อเพิ่มข้อมูลเสริมให้ Screen reader เข้าใจได้</p>
+<pre>&lt;!-- บอก Screen Reader ว่าแท็กนี้ทำหน้าที่เป็นปุ่ม แม้จะไม่ใช่ tag button --&gt;
+&lt;div role="button" tabindex="0" aria-pressed="false"&gt;คลิกฉัน&lt;/div&gt;
+
+&lt;!-- aria-hidden="true" ซ่อนจาก Screen Reader (แต่ตายังมองเห็น) --&gt;
+&lt;i class="icon-search" aria-hidden="true"&gt;&lt;/i&gt;</pre>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> กฎข้อแรกของการใช้ ARIA คือ <strong>"อย่าใช้ ARIA ถ้ามี HTML Tag มาตรฐานให้ใช้อยู่แล้ว"</strong> (No ARIA is better than bad ARIA) การใช้ <code>&lt;button&gt;</code> ย่อมดีและมีบั๊กน้อยกว่าการพยายามเอา <code>&lt;div&gt;</code> มาแปะ ARIA ให้กลายเป็นปุ่ม!
+</div>

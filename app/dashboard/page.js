@@ -1,686 +1,350 @@
 'use client';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { coursesList } from '@/data/courses-registry';
 
-import { useState, useEffect, useCallback } from 'react';
-import { chapters } from '@/data/chapters-index';
-import ProgressRing from '@/components/ProgressRing';
-
-/* ─── helpers ─── */
-function getCompleted() {
+function getCourseProgress(courseId) {
   if (typeof window === 'undefined') return [];
-  try {
-    return JSON.parse(localStorage.getItem('de101-progress') || '[]');
-  } catch { return []; }
+  try { return JSON.parse(localStorage.getItem(`${courseId}-progress`) || '[]'); }
+  catch { return []; }
 }
 
-function getQuizScores() {
-  if (typeof window === 'undefined') return {};
-  try {
-    return JSON.parse(localStorage.getItem('de101-quiz-scores') || '{}');
-  } catch { return {}; }
-}
-
-function getStudyDates() {
+function getBookmarks() {
   if (typeof window === 'undefined') return [];
-  try {
-    return JSON.parse(localStorage.getItem('de101-dates') || '[]');
-  } catch { return []; }
+  try { return JSON.parse(localStorage.getItem('bookmarked-courses') || '[]'); }
+  catch { return []; }
 }
 
-function getStudyTime() {
-  if (typeof window === 'undefined') return 0;
-  try {
-    return parseInt(localStorage.getItem('de101-study-time') || '0', 10);
-  } catch { return 0; }
+function getProgressColor(pct) {
+  if (pct === 0) return '#6b7280';
+  if (pct < 50) return '#f59e0b';
+  if (pct < 100) return '#3b82f6';
+  return '#22c55e';
 }
 
-function calcStreak(dates) {
-  if (!dates.length) return 0;
-  const unique = [...new Set(dates)].sort().reverse();
-  const today = new Date().toISOString().slice(0, 10);
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-
-  if (unique[0] !== today && unique[0] !== yesterday) return 0;
-
-  let streak = 1;
-  for (let i = 0; i < unique.length - 1; i++) {
-    const curr = new Date(unique[i]);
-    const prev = new Date(unique[i + 1]);
-    const diff = (curr - prev) / 86400000;
-    if (diff === 1) streak++;
-    else break;
-  }
-  return streak;
+function getProgressLabel(pct) {
+  if (pct === 0) return { text: 'ยังไม่เริ่ม', bg: 'rgba(107,114,128,0.15)', color: '#9ca3af' };
+  if (pct < 50) return { text: 'กำลังเรียน', bg: 'rgba(245,158,11,0.15)', color: '#f59e0b' };
+  if (pct < 100) return { text: 'ใกล้จบแล้ว!', bg: 'rgba(59,130,246,0.15)', color: '#60a5fa' };
+  return { text: '✅ จบแล้ว', bg: 'rgba(34,197,94,0.15)', color: '#4ade80' };
 }
 
-function formatTime(minutes) {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  if (h === 0) return `${m} นาที`;
-  return `${h} ชั่วโมง ${m} นาที`;
-}
-
-/* ─── badge definitions ─── */
-const BADGES = [
-  { id: 'start', emoji: '🌟', name: 'เริ่มต้น', desc: 'เรียนจบ 1 บทแรก', check: (c) => c >= 1 },
-  { id: 'diligent', emoji: '🔥', name: 'ขยัน', desc: 'เข้าเรียนต่อเนื่อง 3 วัน', check: (_, s) => s >= 3 },
-  { id: 'halfway', emoji: '🏆', name: 'ครึ่งทาง', desc: 'เรียนจบ 8 บท', check: (c) => c >= 8 },
-  { id: 'complete', emoji: '💎', name: 'สำเร็จ', desc: 'เรียนจบครบ 16 บท', check: (c) => c >= 16 },
-  { id: 'quiz', emoji: '🧠', name: 'Quiz Master', desc: 'ได้คะแนน Quiz เต็มทุกบท', check: (_, __, q) => {
-    const scores = Object.values(q);
-    return scores.length === 16 && scores.every(s => s === 3);
-  }},
-];
-
-/* ─── component ─── */
-export default function DashboardPage() {
-  const [completed, setCompleted] = useState([]);
-  const [quizScores, setQuizScores] = useState({});
-  const [streak, setStreak] = useState(0);
-  const [studyTime, setStudyTime] = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  /* load data on mount */
-  useEffect(() => {
-    setCompleted(getCompleted());
-    setQuizScores(getQuizScores());
-    setStreak(calcStreak(getStudyDates()));
-    setStudyTime(getStudyTime());
-    setMounted(true);
-  }, []);
-
-  /* study time tracker */
-  useEffect(() => {
-    if (!mounted) return;
-    const interval = setInterval(() => {
-      setStudyTime(prev => {
-        const next = prev + 1;
-        try { localStorage.setItem('de101-study-time', String(next)); } catch {}
-        return next;
-      });
-    }, 60000); // every minute
-    return () => clearInterval(interval);
-  }, [mounted]);
-
-  /* listen for storage changes from other tabs */
-  useEffect(() => {
-    const handler = () => {
-      setCompleted(getCompleted());
-      setQuizScores(getQuizScores());
-      setStreak(calcStreak(getStudyDates()));
-    };
-    window.addEventListener('storage', handler);
-    return () => window.removeEventListener('storage', handler);
-  }, []);
-
-  const completedCount = completed.length;
-  const totalChapters = chapters.length;
-  const progress = totalChapters > 0 ? Math.round((completedCount / totalChapters) * 100) : 0;
-  const estTimeRemaining = (totalChapters - completedCount) * 45; // ~45 min per chapter
-
-  /* quiz totals */
-  const totalQuizScore = Object.values(quizScores).reduce((a, b) => a + b, 0);
-  const totalPossible = totalChapters * 3;
-  const quizAttempted = Object.keys(quizScores).length;
-
-  if (!mounted) return null;
-
+function CircularRing({ pct, size = 140, stroke = 10, color = '#8b5cf6' }) {
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (pct / 100) * circ;
   return (
-    <>
-      <style jsx global>{`
-        /* ===== DASHBOARD STYLES ===== */
-        .dashboard-page {
-          max-width: 1100px;
-          margin: 0 auto;
-          padding: 2rem 1.5rem 4rem;
-        }
+    <svg width={size} height={size} style={{ transform: 'rotate(-90deg)', display: 'block' }}>
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={stroke} />
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke}
+        strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round"
+        style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1)' }} />
+    </svg>
+  );
+}
 
-        .dashboard-header {
-          text-align: center;
-          margin-bottom: 2.5rem;
-        }
+function ProgressBar({ pct, color }) {
+  return (
+    <div style={{ height: 6, borderRadius: 99, background: 'rgba(255,255,255,0.06)', overflow: 'hidden', flex: 1 }}>
+      <div style={{
+        height: '100%', borderRadius: 99, width: `${pct}%`,
+        background: `linear-gradient(90deg, ${color}, ${color}cc)`,
+        transition: 'width 0.8s cubic-bezier(0.4,0,0.2,1)',
+        boxShadow: `0 0 8px ${color}66`,
+      }} />
+    </div>
+  );
+}
 
-        .dashboard-header h1 {
-          font-size: 2rem;
-          font-weight: 800;
-          background: linear-gradient(135deg, var(--blue), var(--purple));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          margin-bottom: 0.25rem;
-        }
-
-        .dashboard-header p {
-          color: var(--text-dim);
-          font-size: 0.95rem;
-        }
-
-        .dashboard-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 1.25rem;
-          margin-bottom: 2rem;
-        }
-
-        .dashboard-card {
-          background: var(--bg2);
-          border: 1px solid var(--border);
-          border-radius: var(--radius);
-          padding: 1.5rem;
-          transition: transform 0.2s ease, border-color 0.2s ease;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .dashboard-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: linear-gradient(90deg, var(--blue), var(--purple));
-          opacity: 0;
-          transition: opacity 0.2s ease;
-        }
-
-        .dashboard-card:hover {
-          transform: translateY(-2px);
-          border-color: var(--border2);
-        }
-
-        .dashboard-card:hover::before {
-          opacity: 1;
-        }
-
-        .dashboard-card-title {
-          font-size: 0.8rem;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          color: var(--text-muted);
-          margin-bottom: 1rem;
-          font-weight: 600;
-        }
-
-        .dashboard-card--full {
-          grid-column: 1 / -1;
-        }
-
-        /* Progress card */
-        .progress-main {
-          display: flex;
-          align-items: center;
-          gap: 1.5rem;
-        }
-
-        .progress-details h2 {
-          font-size: 1.75rem;
-          font-weight: 800;
-          color: var(--text-bright);
-          line-height: 1.2;
-        }
-
-        .progress-details h2 span {
-          color: var(--blue);
-        }
-
-        .progress-details .progress-sub {
-          color: var(--text-dim);
-          font-size: 0.85rem;
-          margin-top: 0.25rem;
-        }
-
-        .progress-bar-bg {
-          width: 100%;
-          height: 6px;
-          background: var(--bg4);
-          border-radius: 3px;
-          margin-top: 1rem;
-          overflow: hidden;
-        }
-
-        .progress-bar-fill {
-          height: 100%;
-          background: linear-gradient(90deg, var(--blue), var(--purple));
-          border-radius: 3px;
-          transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        /* Streak */
-        .streak-display {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-
-        .streak-fire {
-          font-size: 2.5rem;
-          line-height: 1;
-        }
-
-        .streak-fire.animate {
-          animation: fireGlow 1s ease-in-out infinite alternate;
-        }
-
-        @keyframes fireGlow {
-          0% { filter: brightness(1) drop-shadow(0 0 4px rgba(245, 158, 11, 0.3)); transform: scale(1); }
-          100% { filter: brightness(1.3) drop-shadow(0 0 12px rgba(245, 158, 11, 0.6)); transform: scale(1.1); }
-        }
-
-        .streak-info h2 {
-          font-size: 1.75rem;
-          font-weight: 800;
-          color: var(--text-bright);
-        }
-
-        .streak-info h2 span {
-          color: var(--orange);
-        }
-
-        .streak-info p {
-          color: var(--text-dim);
-          font-size: 0.85rem;
-        }
-
-        /* Quiz heatmap */
-        .quiz-heatmap {
-          display: grid;
-          grid-template-columns: repeat(8, 1fr);
-          gap: 0.5rem;
-          margin-bottom: 0.75rem;
-        }
-
-        .quiz-cell {
-          aspect-ratio: 1;
-          border-radius: var(--radius-sm);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.7rem;
-          font-weight: 700;
-          color: rgba(255,255,255,0.7);
-          transition: transform 0.15s ease;
-          cursor: default;
-          position: relative;
-        }
-
-        .quiz-cell:hover {
-          transform: scale(1.15);
-          z-index: 2;
-        }
-
-        .quiz-cell--3 { background: var(--green); color: #fff; }
-        .quiz-cell--2 { background: var(--orange); color: #fff; }
-        .quiz-cell--1 { background: var(--red); color: #fff; }
-        .quiz-cell--0 { background: var(--bg4); color: var(--text-muted); }
-
-        .quiz-total {
-          text-align: center;
-          color: var(--text-dim);
-          font-size: 0.85rem;
-        }
-
-        .quiz-total strong {
-          color: var(--text-bright);
-          font-size: 1.1rem;
-        }
-
-        .quiz-legend {
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-          margin-top: 0.5rem;
-          font-size: 0.7rem;
-          color: var(--text-muted);
-        }
-
-        .quiz-legend span {
-          display: flex;
-          align-items: center;
-          gap: 0.25rem;
-        }
-
-        .quiz-legend-dot {
-          width: 10px;
-          height: 10px;
-          border-radius: 3px;
-          display: inline-block;
-        }
-
-        /* Study time */
-        .study-time-display {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-
-        .study-time-icon {
-          font-size: 2.5rem;
-          line-height: 1;
-        }
-
-        .study-time-info h2 {
-          font-size: 1.5rem;
-          font-weight: 800;
-          color: var(--text-bright);
-        }
-
-        .study-time-info p {
-          color: var(--text-dim);
-          font-size: 0.85rem;
-        }
-
-        .study-time-pulse {
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          background: var(--green);
-          border-radius: 50%;
-          margin-left: 0.5rem;
-          animation: pulse 2s ease-in-out infinite;
-          vertical-align: middle;
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.4; transform: scale(0.8); }
-        }
-
-        /* Chapter grid */
-        .chapter-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 0.75rem;
-        }
-
-        .chapter-mini {
-          background: var(--bg3);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-sm);
-          padding: 0.75rem;
-          text-align: center;
-          transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-          cursor: default;
-          position: relative;
-        }
-
-        .chapter-mini:hover {
-          transform: translateY(-2px);
-          border-color: var(--border2);
-          background: var(--bg4);
-        }
-
-        .chapter-mini-emoji {
-          font-size: 1.5rem;
-          margin-bottom: 0.25rem;
-          display: block;
-        }
-
-        .chapter-mini-title {
-          font-size: 0.7rem;
-          color: var(--text-dim);
-          line-height: 1.3;
-          margin-bottom: 0.35rem;
-          min-height: 1.8em;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
-        .chapter-mini-status {
-          font-size: 0.85rem;
-        }
-
-        .chapter-mini-phase {
-          position: absolute;
-          top: 4px;
-          right: 4px;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-        }
-
-        /* Badges */
-        .badges-grid {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 1rem;
-        }
-
-        .badge-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          padding: 1.25rem 0.75rem;
-          background: var(--bg3);
-          border: 1px solid var(--border);
-          border-radius: var(--radius);
-          transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-          position: relative;
-        }
-
-        .badge-item:not(.badge-locked):hover {
-          transform: translateY(-3px);
-          border-color: var(--blue-border);
-          box-shadow: 0 8px 24px rgba(59, 130, 246, 0.1);
-        }
-
-        .badge-locked {
-          opacity: 0.3;
-          filter: grayscale(0.8);
-        }
-
-        .badge-emoji {
-          font-size: 2rem;
-          margin-bottom: 0.5rem;
-          line-height: 1;
-          position: relative;
-        }
-
-        .badge-locked .badge-emoji::after {
-          content: '🔒';
-          position: absolute;
-          bottom: -4px;
-          right: -8px;
-          font-size: 0.8rem;
-        }
-
-        .badge-name {
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: var(--text-bright);
-          margin-bottom: 0.15rem;
-        }
-
-        .badge-desc {
-          font-size: 0.65rem;
-          color: var(--text-muted);
-          line-height: 1.3;
-        }
-
-        .badge-unlocked-glow {
-          animation: badgeGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes badgeGlow {
-          0% { box-shadow: 0 0 0 rgba(139, 92, 246, 0); }
-          100% { box-shadow: 0 0 16px rgba(139, 92, 246, 0.2); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-          .dashboard-grid {
-            grid-template-columns: 1fr;
-          }
-          .chapter-grid {
-            grid-template-columns: repeat(4, 1fr);
-          }
-          .badges-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-          .quiz-heatmap {
-            grid-template-columns: repeat(4, 1fr);
-          }
-        }
-
-        @media (max-width: 480px) {
-          .chapter-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-          .badges-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-          .dashboard-page {
-            padding: 1.25rem 1rem 3rem;
-          }
-        }
-      `}</style>
-
-      <div className="dashboard-page">
-        {/* Header */}
-        <div className="dashboard-header">
-          <h1>📊 แดชบอร์ดการเรียนรู้</h1>
-          <p>ติดตามความก้าวหน้าของคุณในคอร์ส Data Engineering 101</p>
-        </div>
-
-        {/* Top stats grid */}
-        <div className="dashboard-grid">
-          {/* ──── 1. Overall Progress ──── */}
-          <div className="dashboard-card">
-            <div className="dashboard-card-title">ความก้าวหน้าโดยรวม</div>
-            <div className="progress-main">
-              <ProgressRing progress={progress} size={90} strokeWidth={6} />
-              <div className="progress-details">
-                <h2>
-                  <span>{completedCount}</span> / 16 <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>บท</span>
-                </h2>
-                <p className="progress-sub">
-                  {completedCount === 16
-                    ? '🎉 เรียนจบทุกบทแล้ว!'
-                    : `⏱️ เหลืออีกประมาณ ${formatTime(estTimeRemaining)}`
-                  }
-                </p>
-              </div>
-            </div>
-            <div className="progress-bar-bg">
-              <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
-            </div>
-          </div>
-
-          {/* ──── 2. Streak ──── */}
-          <div className="dashboard-card">
-            <div className="dashboard-card-title">สถิติการเข้าเรียน</div>
-            <div className="streak-display">
-              <div className={`streak-fire ${streak > 1 ? 'animate' : ''}`}>
-                {streak > 0 ? '🔥' : '❄️'}
-              </div>
-              <div className="streak-info">
-                <h2>
-                  <span>{streak}</span> วันติดต่อกัน
-                </h2>
-                <p>
-                  {streak === 0 && 'เริ่มเรียนวันนี้เพื่อสร้าง Streak!'}
-                  {streak === 1 && 'เริ่มต้นดีมาก! มาเรียนต่อพรุ่งนี้นะ'}
-                  {streak === 2 && 'เก่งมาก! อีกนิดก็จะได้ Badge ขยัน'}
-                  {streak >= 3 && streak < 7 && '🔥 คุณเป็นคนขยันมาก! ไปต่อเลย!'}
-                  {streak >= 7 && '🏆 สุดยอด! Streak ยาวนานมาก!'}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* ──── 3. Quiz Scores ──── */}
-          <div className="dashboard-card">
-            <div className="dashboard-card-title">คะแนน Quiz</div>
-            <div className="quiz-heatmap">
-              {chapters.map(ch => {
-                const score = quizScores[ch.number];
-                const level = score != null ? score : 0;
-                const hasAttempted = score != null;
-                return (
-                  <div
-                    key={ch.number}
-                    className={`quiz-cell quiz-cell--${hasAttempted ? level : 0}`}
-                    title={`บท ${ch.number}: ${ch.shortTitle} — ${hasAttempted ? `${score}/3` : 'ยังไม่ทำ'}`}
-                  >
-                    {ch.number}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="quiz-total">
-              <strong>{totalQuizScore}</strong> / {totalPossible} คะแนน
-              <span style={{ color: 'var(--text-muted)', marginLeft: '0.5rem', fontSize: '0.75rem' }}>
-                ({quizAttempted}/16 บท)
-              </span>
-            </div>
-            <div className="quiz-legend">
-              <span><span className="quiz-legend-dot" style={{ background: 'var(--green)' }} /> 3/3</span>
-              <span><span className="quiz-legend-dot" style={{ background: 'var(--orange)' }} /> 2/3</span>
-              <span><span className="quiz-legend-dot" style={{ background: 'var(--red)' }} /> 1/3</span>
-              <span><span className="quiz-legend-dot" style={{ background: 'var(--bg4)' }} /> ยังไม่ทำ</span>
-            </div>
-          </div>
-
-          {/* ──── 4. Study Time ──── */}
-          <div className="dashboard-card">
-            <div className="dashboard-card-title">เวลาเรียนสะสม</div>
-            <div className="study-time-display">
-              <div className="study-time-icon">⏱️</div>
-              <div className="study-time-info">
-                <h2>
-                  {formatTime(studyTime)}
-                  <span className="study-time-pulse" />
-                </h2>
-                <p>กำลังนับเวลาอยู่...</p>
-              </div>
-            </div>
+function CourseRow({ course }) {
+  const color = getProgressColor(course.pct);
+  const badge = getProgressLabel(course.pct);
+  return (
+    <div style={{
+      background: 'var(--glass,rgba(255,255,255,0.04))',
+      border: `1px solid ${course.pct === 100 ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.07)'}`,
+      borderRadius: 18, padding: '16px 20px',
+      transition: 'all 0.2s', position: 'relative', overflow: 'hidden',
+    }}>
+      {course.pct === 100 && (
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+          background: 'linear-gradient(90deg,#22c55e,#4ade80,#22c55e)', borderRadius: '18px 18px 0 0' }} />
+      )}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+        <div style={{ position: 'relative', flexShrink: 0, width: 52, height: 52 }}>
+          <CircularRing pct={course.pct} size={52} stroke={5} color={color} />
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>
+            {course.emoji}
           </div>
         </div>
-
-        {/* ──── 5. Chapter Progress Grid ──── */}
-        <div className="dashboard-card dashboard-card--full" style={{ marginBottom: '1.25rem' }}>
-          <div className="dashboard-card-title">ความก้าวหน้ารายบท</div>
-          <div className="chapter-grid">
-            {chapters.map(ch => {
-              const done = completed.includes(ch.number) || completed.includes(String(ch.number));
-              return (
-                <div key={ch.number} className="chapter-mini">
-                  <span
-                    className="chapter-mini-phase"
-                    style={{ background: ch.phaseColor }}
-                    title={`Phase ${ch.phase}: ${ch.phaseTitle}`}
-                  />
-                  <span className="chapter-mini-emoji">{ch.emoji}</span>
-                  <div className="chapter-mini-title">{ch.shortTitle}</div>
-                  <div className="chapter-mini-status">{done ? '✅' : '⬜'}</div>
-                </div>
-              );
-            })}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.87rem', fontWeight: 700,
+              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+              {course.fullTitle || course.title}
+            </span>
+            <span style={{ fontSize: '0.62rem', fontWeight: 600, padding: '2px 9px',
+              borderRadius: 10, background: badge.bg, color: badge.color, whiteSpace: 'nowrap', flexShrink: 0 }}>
+              {badge.text}
+            </span>
           </div>
-        </div>
-
-        {/* ──── 6. Achievements ──── */}
-        <div className="dashboard-card dashboard-card--full">
-          <div className="dashboard-card-title">🏅 เหรียญตรา & ความสำเร็จ</div>
-          <div className="badges-grid">
-            {BADGES.map(badge => {
-              const unlocked = badge.check(completedCount, streak, quizScores);
-              return (
-                <div
-                  key={badge.id}
-                  className={`badge-item ${unlocked ? 'badge-unlocked-glow' : 'badge-locked'}`}
-                >
-                  <div className="badge-emoji">{badge.emoji}</div>
-                  <div className="badge-name">{badge.name}</div>
-                  <div className="badge-desc">{badge.desc}</div>
-                </div>
-              );
-            })}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 7 }}>
+            <ProgressBar pct={course.pct} color={color} />
+            <span style={{ fontSize: '0.72rem', fontWeight: 700, color, flexShrink: 0, minWidth: 36, textAlign: 'right' }}>
+              {course.pct}%
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.67rem', color: 'var(--text-muted,#6b7280)' }}>
+              ✅ {course.done}/{course.total} บท
+            </span>
+            {course.level && (
+              <span style={{ fontSize: '0.62rem', padding: '1px 8px', borderRadius: 8,
+                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+                color: course.levelColor || 'var(--text-dim)' }}>{course.level}</span>
+            )}
+            {course.duration && (
+              <span style={{ fontSize: '0.67rem', color: 'var(--text-muted,#6b7280)' }}>⏱️ {course.duration}</span>
+            )}
+            <Link href={`/courses/${course.id}`} style={{
+              marginLeft: 'auto', flexShrink: 0,
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '5px 14px', borderRadius: 14, fontSize: '0.72rem', fontWeight: 700,
+              background: course.pct === 100
+                ? 'linear-gradient(135deg,rgba(34,197,94,0.2),rgba(74,222,128,0.15))'
+                : 'linear-gradient(135deg,rgba(139,92,246,0.25),rgba(59,130,246,0.2))',
+              color: course.pct === 100 ? '#4ade80' : '#a78bfa',
+              border: `1px solid ${course.pct === 100 ? 'rgba(34,197,94,0.3)' : 'rgba(139,92,246,0.35)'}`,
+              textDecoration: 'none', transition: 'all 0.2s',
+            }}>
+              {course.pct === 100 ? '🔁 ทบทวน' : course.done > 0 ? '▶ เรียนต่อ' : '🚀 เริ่ม'}
+            </Link>
           </div>
         </div>
       </div>
-    </>
+    </div>
+  );
+}
+
+const TABS = [
+  { key: 'progress', label: '📈 กำลังเรียน' },
+  { key: 'bookmarks', label: '🔖 Bookmarks' },
+  { key: 'all', label: '📚 ทั้งหมด' },
+];
+
+const SORT_OPTIONS = [
+  { key: 'progress', label: '📈 ความคืบหน้า' },
+  { key: 'alpha', label: '🔤 ชื่อ' },
+];
+
+export default function AllDashboardPage() {
+  const [courseData, setCourseData] = useState([]);
+  const [sortBy, setSortBy] = useState('progress');
+  const [activeTab, setActiveTab] = useState('progress');
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const bookmarks = getBookmarks();
+    const data = coursesList.map(course => {
+      const completed = getCourseProgress(course.id);
+      const total = course.chapterCount || 0;
+      const done = Array.isArray(completed) ? completed.length : 0;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      const isBookmarked = bookmarks.includes(course.id);
+      return { ...course, done, total, pct, isBookmarked };
+    });
+    setCourseData(data);
+    setLoaded(true);
+  }, []);
+
+  const started = courseData.filter(c => c.done > 0);
+  const totalDone = courseData.reduce((a, c) => a + c.done, 0);
+  const totalChapters = courseData.reduce((a, c) => a + c.total, 0);
+  const overallPct = totalChapters > 0 ? Math.round((totalDone / totalChapters) * 100) : 0;
+  const completedCourses = courseData.filter(c => c.pct === 100);
+  const bookmarkedCourses = courseData.filter(c => c.isBookmarked);
+
+  const sorted = [...courseData].sort((a, b) => {
+    if (sortBy === 'progress') return b.pct - a.pct;
+    return a.title.localeCompare(b.title, 'th');
+  });
+
+  const displayList =
+    activeTab === 'progress' ? sorted.filter(c => c.done > 0) :
+    activeTab === 'bookmarks' ? sorted.filter(c => c.isBookmarked) :
+    sorted;
+
+  if (!loaded) {
+    return (
+      <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: 'var(--text-dim)', fontSize: '1rem' }}>กำลังโหลด...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', background: 'var(--bg, #0a0a0f)', color: 'var(--text, #f1f5f9)', fontFamily: 'inherit', padding: '0 0 80px' }}>
+
+      {/* Header */}
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(59,130,246,0.08) 100%)',
+        borderBottom: '1px solid rgba(139,92,246,0.2)',
+        padding: '40px 24px 32px', textAlign: 'center',
+      }}>
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+          <div style={{ fontSize: '2.6rem', marginBottom: 10 }}>📊</div>
+          <h1 style={{
+            fontSize: 'clamp(1.6rem,4vw,2.4rem)', fontWeight: 900, margin: '0 0 8px',
+            background: 'linear-gradient(135deg,#a78bfa,#60a5fa)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+          }}>ความก้าวหน้าของฉัน</h1>
+          <p style={{ color: 'var(--text-dim,#9ca3af)', margin: 0, fontSize: '0.9rem' }}>
+            ติดตามความคืบหน้า · Bookmarks · 60 คอร์สในที่เดียว
+          </p>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 20px' }}>
+
+        {/* Overall Stats */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 28,
+          alignItems: 'center',
+          background: 'var(--glass,rgba(255,255,255,0.04))',
+          border: '1px solid rgba(139,92,246,0.2)',
+          borderRadius: 24, padding: '24px 28px',
+          marginTop: 28, marginBottom: 24,
+        }}>
+          <div style={{ position: 'relative', width: 120, height: 120 }}>
+            <CircularRing pct={overallPct} size={120} stroke={10} color="#8b5cf6" />
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '1.5rem', fontWeight: 900, color: '#a78bfa', lineHeight: 1 }}>{overallPct}%</span>
+              <span style={{ fontSize: '0.58rem', color: 'var(--text-muted,#6b7280)', marginTop: 3 }}>โดยรวม</span>
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(100px,1fr))', gap: 12 }}>
+            {[
+              { val: started.length, lbl: 'กำลังเรียน', color: '#8b5cf6', icon: '📚' },
+              { val: completedCourses.length, lbl: 'จบแล้ว', color: '#22c55e', icon: '🏆' },
+              { val: bookmarkedCourses.length, lbl: 'Bookmarks', color: '#f59e0b', icon: '🔖' },
+              { val: totalDone, lbl: 'บทเรียนที่จบ', color: '#3b82f6', icon: '✅' },
+            ].map(s => (
+              <div key={s.lbl} style={{
+                background: 'rgba(255,255,255,0.04)', borderRadius: 12,
+                border: '1px solid rgba(255,255,255,0.07)',
+                padding: '12px 10px', textAlign: 'center',
+              }}>
+                <div style={{ fontSize: '1rem', marginBottom: 3 }}>{s.icon}</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.val}</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted,#6b7280)', marginTop: 3, lineHeight: 1.3 }}>{s.lbl}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+          {TABS.map(tab => (
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{
+              padding: '8px 18px', borderRadius: 24, fontSize: '0.78rem', fontWeight: 700,
+              border: `1px solid ${activeTab === tab.key ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}`,
+              background: activeTab === tab.key
+                ? 'linear-gradient(135deg,rgba(139,92,246,0.3),rgba(59,130,246,0.2))'
+                : 'rgba(255,255,255,0.04)',
+              color: activeTab === tab.key ? '#a78bfa' : 'var(--text-dim,#9ca3af)',
+              cursor: 'pointer', transition: 'all 0.2s',
+            }}>{tab.label}{tab.key === 'bookmarks' && bookmarkedCourses.length > 0 ?
+              <span style={{ marginLeft: 6, fontSize: '0.65rem', background: '#f59e0b22',
+                color: '#f59e0b', padding: '1px 6px', borderRadius: 8, border: '1px solid #f59e0b33' }}>
+                {bookmarkedCourses.length}
+              </span> : null}
+            </button>
+          ))}
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
+            {SORT_OPTIONS.map(opt => (
+              <button key={opt.key} onClick={() => setSortBy(opt.key)} style={{
+                padding: '6px 12px', borderRadius: 20, fontSize: '0.72rem', fontWeight: 600,
+                border: `1px solid ${sortBy === opt.key ? '#8b5cf6' : 'rgba(255,255,255,0.08)'}`,
+                background: sortBy === opt.key ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.04)',
+                color: sortBy === opt.key ? '#a78bfa' : 'var(--text-muted,#6b7280)',
+                cursor: 'pointer', transition: 'all 0.2s',
+              }}>{opt.label}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Empty States */}
+        {activeTab === 'progress' && started.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '52px 24px',
+            background: 'var(--glass,rgba(255,255,255,0.04))',
+            border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20 }}>
+            <div style={{ fontSize: '3rem', marginBottom: 14 }}>🎓</div>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 8 }}>ยังไม่ได้เริ่มเรียนเลย</h2>
+            <p style={{ color: 'var(--text-dim,#9ca3af)', fontSize: '0.85rem', marginBottom: 20 }}>
+              เลือกคอร์สและเริ่มเรียนได้เลย ฟรี 100%
+            </p>
+            <Link href="/courses" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: 'linear-gradient(135deg,#7c3aed,#4f46e5)',
+              color: '#fff', padding: '12px 28px', borderRadius: 24,
+              fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none',
+              boxShadow: '0 4px 16px rgba(124,58,237,0.4)',
+            }}>🚀 ดูคอร์สทั้งหมด</Link>
+          </div>
+        )}
+
+        {activeTab === 'bookmarks' && bookmarkedCourses.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '52px 24px',
+            background: 'var(--glass,rgba(255,255,255,0.04))',
+            border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20 }}>
+            <div style={{ fontSize: '3rem', marginBottom: 14 }}>🔖</div>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 8 }}>ยังไม่มี Bookmark</h2>
+            <p style={{ color: 'var(--text-dim,#9ca3af)', fontSize: '0.85rem', marginBottom: 20 }}>
+              กด 🏷️ ในหน้าคอร์สเพื่อบันทึกคอร์สที่สนใจ
+            </p>
+            <Link href="/courses" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: 'linear-gradient(135deg,#f59e0b,#d97706)',
+              color: '#fff', padding: '12px 28px', borderRadius: 24,
+              fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none',
+              boxShadow: '0 4px 16px rgba(245,158,11,0.4)',
+            }}>📚 เลือกคอร์สที่ชอบ</Link>
+          </div>
+        )}
+
+        {/* Course List */}
+        {displayList.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted,#6b7280)', marginBottom: 4 }}>
+              แสดง {displayList.length} คอร์ส
+            </div>
+            {displayList.map(course => <CourseRow key={course.id} course={course} />)}
+          </div>
+        )}
+
+        {/* Footer CTA */}
+        <div style={{
+          marginTop: 40, padding: '24px', textAlign: 'center',
+          background: 'linear-gradient(135deg,rgba(139,92,246,0.08),rgba(59,130,246,0.06))',
+          border: '1px solid rgba(139,92,246,0.15)', borderRadius: 20,
+        }}>
+          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/courses" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              background: 'linear-gradient(135deg,#7c3aed,#4f46e5)',
+              color: '#fff', padding: '10px 22px', borderRadius: 20,
+              fontSize: '0.82rem', fontWeight: 700, textDecoration: 'none',
+              boxShadow: '0 4px 14px rgba(124,58,237,0.35)',
+            }}>🎓 ดูคอร์สทั้งหมด</Link>
+            <Link href="/roadmap" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+              color: 'var(--text-dim,#9ca3af)', padding: '10px 22px', borderRadius: 20,
+              fontSize: '0.82rem', fontWeight: 700, textDecoration: 'none',
+            }}>🗺️ Learning Roadmap</Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

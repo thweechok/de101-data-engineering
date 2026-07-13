@@ -30,9 +30,12 @@ export default function RootLayout({ children }) {
       const savedSize = parseInt(localStorage.getItem('de101-fontsize') || '16');
       setFontSize(savedSize);
       document.documentElement.style.setProperty('--user-font-size', `${savedSize}px`);
-      // Check if email already captured
       if (localStorage.getItem('de101-email')) setEmailSaved(true);
     } catch {}
+    // Register Service Worker (PWA)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
   }, []);
 
   // Show email popup after 60s if not already captured
@@ -125,6 +128,13 @@ export default function RootLayout({ children }) {
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://de-course-seven.vercel.app" />
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+        {/* PWA */}
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <meta name="theme-color" content="#8b5cf6" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         {/* Syntax Highlighting */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
@@ -151,6 +161,13 @@ export default function RootLayout({ children }) {
               <span className="font-size-label">{fontSize}</span>
               <button className="font-btn" onClick={() => changeFontSize(1)} title="เพิ่มขนาดตัวอักษร">A+</button>
             </div>
+            <a href="/dashboard" title="ดูความก้าวหน้า" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 12px',
+              borderRadius: 20, fontSize: '0.75rem', fontWeight: 600, textDecoration: 'none',
+              background: 'linear-gradient(135deg,rgba(139,92,246,.2),rgba(59,130,246,.2))',
+              border: '1px solid rgba(139,92,246,.4)', color: '#a78bfa',
+              transition: 'all 0.2s',
+            }}>📊 Dashboard</a>
             <button className="theme-toggle" onClick={toggleTheme} title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}>
               {theme === 'dark' ? '☀️' : '🌙'}
             </button>
@@ -176,13 +193,17 @@ export default function RootLayout({ children }) {
               <button className="modal-close" onClick={() => setShowShortcuts(false)}>✕</button>
               <h3>⌨️ Keyboard Shortcuts</h3>
               <div className="shortcuts-list">
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Navigation</div>
                 <div className="shortcut-row"><kbd>←</kbd> <span>บทก่อนหน้า</span></div>
                 <div className="shortcut-row"><kbd>→</kbd> <span>บทถัดไป</span></div>
+                <div className="shortcut-row"><kbd>Home</kbd> <span>กลับด้านบนสุด</span></div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', margin: '12px 0 8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Actions</div>
+                <div className="shortcut-row"><kbd>P</kbd> <span>พิมพ์/Export PDF</span></div>
+                <div className="shortcut-row"><kbd>A+</kbd> <span>เพิ่มขนาดตัวอักษร</span></div>
+                <div className="shortcut-row"><kbd>A-</kbd> <span>ลดขนาดตัวอักษร</span></div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', margin: '12px 0 8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>UI</div>
                 <div className="shortcut-row"><kbd>?</kbd> <span>เปิด/ปิด Shortcuts</span></div>
                 <div className="shortcut-row"><kbd>Esc</kbd> <span>ปิด Modal</span></div>
-                <div className="shortcut-row"><kbd>↑</kbd> <span>เลื่อนขึ้น</span></div>
-                <div className="shortcut-row"><kbd>↓</kbd> <span>เลื่อนลง</span></div>
-                <div className="shortcut-row"><kbd>Home</kbd> <span>กลับด้านบนสุด</span></div>
               </div>
             </div>
           </div>

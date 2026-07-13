@@ -1,0 +1,68 @@
+<h2>1. ทำความรู้จักกับ HTML5</h2>
+<p>HTML5 เป็นเวอร์ชันล่าสุดและเป็นมาตรฐานสากลของ <strong>HyperText Markup Language</strong> ที่ถูกพัฒนาขึ้นเพื่อรองรับฟีเจอร์ของเว็บยุคใหม่ (Modern Web) รวมถึงการรองรับมัลติมีเดีย เช่น วิดีโอและเสียง โดยไม่ต้องพึ่งพาปลั๊กอินอย่าง Flash โครงสร้างพื้นฐานของการเขียน HTML จะประกอบไปด้วย 3 คำศัพท์หลักที่คุณต้องจำให้ขึ้นใจ คือ Tags, Elements, และ Attributes</p>
+
+<h2>2. Tags, Elements และ Attributes คืออะไร?</h2>
+<ul>
+  <li><strong>Tag (แท็ก):</strong> คือคำสั่งที่ใช้เพื่อบอกเบราว์เซอร์ว่าข้อความหรือเนื้อหานั้นๆ คืออะไร แท็กจะถูกครอบด้วยวงเล็บมุม (Angle brackets) เช่น <code>&lt;p&gt;</code> มักจะมาเป็นคู่เสมอ คือ <strong>Tag เปิด</strong> (Opening tag) และ <strong>Tag ปิด</strong> (Closing tag) ซึ่งแท็กปิดจะมีเครื่องหมาย Slash (/) เพิ่มเข้ามา เช่น <code>&lt;/p&gt;</code></li>
+  <li><strong>Element (อิลิเมนต์):</strong> คือองค์ประกอบโดยรวมทั้งหมด ตั้งแต่ Tag เปิด, เนื้อหา (Content) ที่อยู่ตรงกลาง, ไปจนถึง Tag ปิด เช่น <code>&lt;p&gt;สวัสดีชาวโลก&lt;/p&gt;</code> ทั้งหมดนี้เรียกว่า 1 Paragraph Element</li>
+  <li><strong>Attribute (แอตทริบิวต์):</strong> คือคุณสมบัติหรือข้อมูลเพิ่มเติม (Metadata) ที่เรากำหนดให้กับ Element นั้นๆ แอตทริบิวต์จะถูกเขียนไว้ใน <strong>Tag เปิดเสมอ</strong> และมักมาในรูปแบบ <code>name="value"</code> เช่น <code>&lt;a href="https://example.com"&gt;คลิกที่นี่&lt;/a&gt;</code> ในที่นี้ <code>href</code> คือ Attribute ที่บอกว่าลิงก์นี้จะชี้ไปที่ไหน</li>
+</ul>
+
+<h2>3. โครงสร้างพื้นฐานของไฟล์ HTML (HTML Boilerplate)</h2>
+<p>ทุกไฟล์ HTML ต้องมีโครงสร้างพื้นฐานที่เหมือนกัน เพื่อให้เบราว์เซอร์ทำงานได้อย่างถูกต้อง ดังนี้:</p>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="th"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;เว็บไซต์แรกของฉัน&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- เนื้อหาของเว็บไซต์จะอยู่ที่นี่ --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<ul>
+  <li><strong>&lt;!DOCTYPE html&gt;</strong>: ประกาศว่าไฟล์นี้เป็น HTML5</li>
+  <li><strong>&lt;html&gt;</strong>: Root Element ครอบทุกอย่างในเอกสาร</li>
+  <li><strong>&lt;head&gt;</strong>: ส่วนหัวที่เก็บข้อมูล Metadata, ลิงก์ไฟล์ CSS, ตั้งค่า SEO (ผู้ใช้จะไม่เห็นเนื้อหาในส่วนนี้บนหน้าเว็บ)</li>
+  <li><strong>&lt;body&gt;</strong>: ส่วนลำตัวที่เก็บเนื้อหาทั้งหมดที่ต้องการให้ผู้ใช้มองเห็น เช่น ข้อความ รูปภาพ วิดีโอ</li>
+</ul>
+
+<h2>4. Semantic HTML: การใช้แท็กให้มีความหมาย</h2>
+<p>ในอดีต นักพัฒนาเว็บมักจะใช้ <code>&lt;div&gt;</code> (Division) หรือ <code>&lt;span&gt;</code> ในการครอบเนื้อหาทุกส่วน ซึ่งทำให้โค้ดอ่านยาก และคอมพิวเตอร์ไม่เข้าใจว่าส่วนไหนสำคัญ HTML5 จึงริเริ่มแนวคิด <strong>Semantic HTML</strong> ซึ่งคือการใช้แท็กที่มีความหมายตรงกับเนื้อหา</p>
+<p>ข้อดีของ Semantic HTML คือ:</p>
+<ol style="padding-left:20px">
+  <li><strong>SEO (Search Engine Optimization) ดีขึ้น:</strong> Google หรือ Search Engine อื่นๆ สามารถให้คะแนนและเข้าใจโครงสร้างเว็บได้ดีขึ้น</li>
+  <li><strong>Accessibility (การเข้าถึง):</strong> โปรแกรม Screen Reader สำหรับผู้พิการทางสายตาสามารถอ่านและนำทาง (Navigate) ผ่านเว็บไซต์ได้ง่ายขึ้น</li>
+</ol>
+<p><strong>Semantic Tags ที่สำคัญ:</strong></p>
+<ul>
+  <li><code>&lt;header&gt;</code>: ส่วนหัวของหน้าเพจหรือบทความ มักมีโลโก้และแถบเมนูนำทาง</li>
+  <li><code>&lt;nav&gt;</code>: ส่วนที่บรรจุลิงก์สำหรับการนำทางหลัก (Navigation menu)</li>
+  <li><code>&lt;main&gt;</code>: เนื้อหาหลักของหน้าเพจ (ควรมีแค่ 1 อันต่อ 1 หน้า)</li>
+  <li><code>&lt;article&gt;</code>: เนื้อหาที่สมบูรณ์ในตัวเอง สามารถแยกไปอ่านเดี่ยวๆ ได้ เช่น บทความบล็อก, โพสต์ข่าว</li>
+  <li><code>&lt;section&gt;</code>: การแบ่งกลุ่มเนื้อหาเป็นส่วนๆ โดยเนื้อหาในกลุ่มนั้นต้องมีความเกี่ยวข้องกัน</li>
+  <li><code>&lt;footer&gt;</code>: ส่วนท้ายของหน้าเพจ มักเป็นข้อมูลลิขสิทธิ์, ช่องทางการติดต่อ, ลิงก์ย่อยๆ</li>
+</ul>
+
+<h2>5. Forms and Inputs (การรับข้อมูลจากผู้ใช้)</h2>
+<p>หนึ่งในฟีเจอร์ที่สำคัญที่สุดของเว็บคือ <strong>การสร้างแบบฟอร์ม</strong> เพื่อรับข้อมูลจากผู้ใช้ (User Input) เช่น ฟอร์มล็อกอิน, สมัครสมาชิก, หรือค้นหาสินค้า เราใช้แท็ก <code>&lt;form&gt;</code> เป็นตัวครอบ input ต่างๆ</p>
+<pre>
+&lt;form action="/submit-data" method="POST"&gt;
+  &lt;label for="username"&gt;ชื่อผู้ใช้:&lt;/label&gt;
+  &lt;input type="text" id="username" name="user_name" required placeholder="กรอกชื่อของคุณ"&gt;
+  
+  &lt;label for="userEmail"&gt;อีเมล:&lt;/label&gt;
+  &lt;input type="email" id="userEmail" name="user_email" required&gt;
+  
+  &lt;button type="submit"&gt;ส่งข้อมูล&lt;/button&gt;
+&lt;/form&gt;
+</pre>
+<p>HTML5 มาพร้อมกับ <strong>Input Types</strong> ใหม่ๆ เช่น <code>type="email"</code>, <code>type="date"</code>, <code>type="number"</code> ซึ่งเบราว์เซอร์จะทำการ <strong>Validation (ตรวจสอบความถูกต้อง)</strong> ให้เบื้องต้นโดยอัตโนมัติ เช่น หากใส่ type="email" แล้วผู้ใช้พิมพ์ข้อความที่ไม่มีเครื่องหมาย @ เบราว์เซอร์ก็จะแจ้งเตือนก่อนส่งฟอร์ม</p>
+
+<div class="tip-box">
+  <strong>💡 Best Practice สำหรับ Forms</strong>
+  ควรใช้แท็ก <code>&lt;label&gt;</code> คู่กับ <code>&lt;input&gt;</code> เสมอ โดยกำหนดให้ค่า Attribute <code>for</code> ของ label ตรงกับค่า <code>id</code> ของ input สิ่งนี้จะช่วยให้ผู้ใช้สามารถ "คลิกที่ข้อความ" เพื่อเป็นการโฟกัสที่ช่อง input ได้ทันที (ลองนึกถึงช่อง Checkbox เล็กๆ การคลิกที่ข้อความข้างๆ จะช่วยให้ผู้ใช้งานผ่านมือถือคลิกได้ง่ายขึ้นมาก)
+</div>

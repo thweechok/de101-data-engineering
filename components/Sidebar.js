@@ -1,8 +1,9 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { chapters } from '@/data/chapters-index';
+import { chapters as defaultChapters } from '@/data/chapters-index';
 import { coursesList } from '@/data/courses-registry';
+import { getCourseChapters } from '@/data/course-loader';
 import { useState, useEffect } from 'react';
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -14,6 +15,11 @@ export default function Sidebar({ isOpen, onClose }) {
   // Detect which course we're in from URL
   const courseMatch = pathname.match(/\/courses\/([^/]+)/);
   const activeCourseId = courseMatch ? courseMatch[1] : null;
+
+  // Get chapters for the active course, or default DE101 chapters
+  const courseChapters = activeCourseId ? getCourseChapters(activeCourseId) : [];
+  const chapters = activeCourseId && courseChapters.length > 0 ? courseChapters : defaultChapters;
+  const isOnCourse = activeCourseId && courseChapters.length > 0;
 
   useEffect(() => {
     try {
@@ -31,23 +37,27 @@ export default function Sidebar({ isOpen, onClose }) {
   ];
 
   const progress = chapters.length > 0 ? Math.round((completed.length / chapters.length) * 100) : 0;
+  const activeCourse = activeCourseId ? coursesList.find(c => c.id === activeCourseId) : null;
 
   const filteredChapters = search.trim()
-    ? chapters.filter(c =>
-        c.title.toLowerCase().includes(search.toLowerCase()) ||
-        c.shortTitle.toLowerCase().includes(search.toLowerCase()) ||
-        c.description?.toLowerCase().includes(search.toLowerCase())
-      )
+    ? chapters.filter(c => {
+        const title = c.title || c.shortTitle || '';
+        const desc = c.description || '';
+        const q = search.toLowerCase();
+        return title.toLowerCase().includes(q) || desc.toLowerCase().includes(q);
+      })
     : null;
 
-  const activeCourse = activeCourseId ? coursesList.find(c => c.id === activeCourseId) : null;
+  const getChapterHref = (ch) => {
+    if (isOnCourse) return `/courses/${activeCourseId}/${ch.slug}`;
+    return `/chapters/${ch.slug}`;
+  };
 
   return (
     <>
       <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          {/* Course Switcher */}
           <div style={{ position: 'relative' }}>
             <button
               onClick={() => setShowCourses(!showCourses)}
@@ -71,20 +81,18 @@ export default function Sidebar({ isOpen, onClose }) {
                 <Link href="/" onClick={() => { onClose(); setShowCourses(false); }} style={{
                   display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', textDecoration: 'none',
                   color: !activeCourseId ? 'var(--blue)' : 'var(--text-dim)', fontSize: '0.78rem',
-                  background: !activeCourseId ? 'var(--blue-dim)' : 'transparent', transition: 'all 0.15s',
+                  background: !activeCourseId ? 'var(--blue-dim)' : 'transparent',
                   fontWeight: !activeCourseId ? 700 : 400,
                 }}>🎓 DE101 — เริ่มต้นจากศูนย์</Link>
-                
                 <div style={{ height: 1, background: 'var(--border)', margin: '2px 0' }} />
                 <div style={{ padding: '4px 12px', fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>
                   คอร์สเสริม
                 </div>
-
                 {coursesList.map(c => (
                   <Link key={c.id} href={`/courses/${c.id}`} onClick={() => { onClose(); setShowCourses(false); }} style={{
                     display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', textDecoration: 'none',
                     color: activeCourseId === c.id ? 'var(--blue)' : 'var(--text-dim)', fontSize: '0.78rem',
-                    background: activeCourseId === c.id ? 'var(--blue-dim)' : 'transparent', transition: 'all 0.15s',
+                    background: activeCourseId === c.id ? 'var(--blue-dim)' : 'transparent',
                     fontWeight: activeCourseId === c.id ? 700 : 400,
                   }}>{c.emoji} {c.title}</Link>
                 ))}
@@ -99,13 +107,7 @@ export default function Sidebar({ isOpen, onClose }) {
             <div className="progress-text">{progress}% สำเร็จ ({completed.length}/{chapters.length} บท)</div>
           </div>
           <div className="sidebar-search">
-            <input
-              type="text"
-              placeholder="🔍 ค้นหาบทเรียน..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="search-input"
-            />
+            <input type="text" placeholder="🔍 ค้นหาบทเรียน..." value={search} onChange={e => setSearch(e.target.value)} className="search-input" />
           </div>
         </div>
 
@@ -120,14 +122,33 @@ export default function Sidebar({ isOpen, onClose }) {
                 <div style={{ padding: '12px 20px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>ไม่พบบทเรียน</div>
               )}
               {filteredChapters.map(ch => {
-                const href = `/chapters/${ch.slug}`;
+                const href = getChapterHref(ch);
                 const isActive = pathname === href;
                 const isDone = completed.includes(ch.number);
                 return (
                   <Link key={ch.slug} href={href} className={`chapter-link ${isActive ? 'active' : ''} ${isDone ? 'completed' : ''}`} onClick={() => { onClose(); setSearch(''); }}>
-                    <span className="ch-emoji">{isDone ? '✅' : ch.emoji}</span>
+                    <span className="ch-emoji">{isDone ? '✅' : (ch.emoji || '📖')}</span>
                     <span className="ch-num">{ch.number}</span>
-                    {ch.shortTitle}
+                    {ch.shortTitle || ch.title}
+                  </Link>
+                );
+              })}
+            </div>
+          ) : isOnCourse ? (
+            <div className="phase-group">
+              <div className="phase-label">
+                <span className="phase-dot" style={{ background: activeCourse?.levelColor || '#10b981' }} />
+                {activeCourse?.emoji} {activeCourse?.title || 'บทเรียน'}
+              </div>
+              {chapters.map(ch => {
+                const href = getChapterHref(ch);
+                const isActive = pathname === href;
+                const isDone = completed.includes(ch.number);
+                return (
+                  <Link key={ch.slug} href={href} className={`chapter-link ${isActive ? 'active' : ''} ${isDone ? 'completed' : ''}`} onClick={onClose}>
+                    <span className="ch-emoji">{isDone ? '✅' : (ch.emoji || '📖')}</span>
+                    <span className="ch-num">{ch.number}</span>
+                    {ch.shortTitle || ch.title}
                   </Link>
                 );
               })}

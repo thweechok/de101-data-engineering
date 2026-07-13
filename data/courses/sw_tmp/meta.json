@@ -1,0 +1,16 @@
+[
+  { "number": 0, "slug": "overview", "emoji": "🌈", "title": "Overview: การทำงานของเว็บ (How the web works)" },
+  { "number": 1, "slug": "html-basics", "emoji": "📄", "title": "HTML5 Basics: โครงสร้างพื้นฐานของเว็บ" },
+  { "number": 2, "slug": "css-basics", "emoji": "🎨", "title": "CSS Fundamentals: พื้นฐานการตกแต่งเว็บ" },
+  { "number": 3, "slug": "box-model", "emoji": "📦", "title": "The Box Model: กล่องแห่งการจัดวาง" },
+  { "number": 4, "slug": "positioning", "emoji": "📍", "title": "Positioning: การจัดวางตำแหน่ง" },
+  { "number": 5, "slug": "flexbox", "emoji": "🤸", "title": "Flexbox: เลย์เอาต์มิติเดียวที่ยืดหยุ่น" },
+  { "number": 6, "slug": "grid", "emoji": "🏁", "title": "CSS Grid: เลย์เอาต์สองมิติอันทรงพลัง" },
+  { "number": 7, "slug": "responsive", "emoji": "📱", "title": "Responsive Design: รองรับทุกหน้าจอ" },
+  { "number": 8, "slug": "css-variables", "emoji": "🧮", "title": "CSS Variables: ตัวแปรใน CSS" },
+  { "number": 9, "slug": "animations", "emoji": "✨", "title": "Transitions and Animations: เพิ่มชีวิตชีวาให้เว็บ" },
+  { "number": 10, "slug": "modern-css", "emoji": "🚀", "title": "Modern CSS Features: ฟีเจอร์ยุคใหม่" },
+  { "number": 11, "slug": "a11y", "emoji": "♿", "title": "Accessibility (a11y): เว็บสำหรับทุกคน" },
+  { "number": 12, "slug": "frameworks", "emoji": "🛠️", "title": "CSS Frameworks: เครื่องมือทุ่นแรง" },
+  { "number": 13, "slug": "project", "emoji": "🏆", "title": "Project: สร้าง Portfolio Website" }
+]

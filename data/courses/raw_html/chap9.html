@@ -1,0 +1,46 @@
+<h2>เพิ่มชีวิตชีวาให้หน้าเว็บด้วย Animations</h2>
+<p>เว็บไซต์ที่ดีไม่ควรนิ่งเป็นหิน การเพิ่มความเคลื่อนไหว (Motion) เล็กๆ น้อยๆ เมื่อผู้ใช้ปฏิสัมพันธ์ (เช่น นำเมาส์ไปชี้) จะช่วยเพิ่ม <strong>User Experience (UX)</strong> ได้อย่างมหาศาล และทำให้เว็บดูมีความเป็นมืออาชีพ CSS มีเครื่องมือหลัก 2 อย่างในการทำสิ่งนี้: <strong>Transitions</strong> และ <strong>Animations</strong></p>
+
+<h2>CSS Transitions (การเปลี่ยนแปลงแบบสมูท)</h2>
+<p><code>transition</code> ใช้สำหรับเปลี่ยนสถานะ (State) ขององค์ประกอบจากแบบหนึ่งเป็นอีกแบบหนึ่งอย่างนุ่มนวล (มักใช้ร่วมกับ Pseudo-classes เช่น <code>:hover</code> หรือ <code>:focus</code>) แทนที่จะเปลี่ยนสีปุ่มแบบกระพริบฉับพลัน เราทำให้มันค่อยๆ เฟดสีได้</p>
+<pre>.btn {
+    background-color: #3498db;
+    /* transition: [property] [duration] [timing-function] [delay]; */
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn:hover {
+    background-color: #2980b9; /* เมื่อ hover สีจะเปลี่ยนเป็นสีนี้ โดยใช้เวลา 0.3 วิ */
+}</pre>
+
+<h2>Transform (การบิดเบือนรูปทรงและตำแหน่ง)</h2>
+<p>property <code>transform</code> ไม่ใช่แอนิเมชันในตัวมันเอง แต่มันคือการปรับเปลี่ยนรูปทรง (ขยับ, หมุน, ย่อ/ขยาย) ซึ่งมักนำมาใช้คู่กับ <code>transition</code> เพื่อสร้างเอฟเฟกต์ที่ลื่นไหล</p>
+<ul>
+    <li><code>translate(x, y)</code>: ขยับตำแหน่ง (นิยมใช้แทน top/left เพราะเบราว์เซอร์จะคำนวณผ่าน GPU ทำให้ลื่นไหลกว่ามาก ไม่กระตุก)</li>
+    <li><code>scale(n)</code>: ย่อขยายขนาด (1 คือขนาดปกติ, 1.1 คือใหญ่ขึ้น 10%)</li>
+    <li><code>rotate(deg)</code>: หมุนเป็นองศา (เช่น <code>rotate(45deg)</code>)</li>
+</ul>
+<pre>.card {
+    transition: transform 0.2s ease;
+}
+.card:hover {
+    transform: translateY(-10px) scale(1.02); /* ขยับขึ้น 10px และขยาย 2% ตอน hover */
+}</pre>
+
+<h2>CSS Keyframes Animation (แอนิเมชันแบบควบคุมเต็มขั้น)</h2>
+<p>หากคุณต้องการให้แอนิเมชันเล่นเองตั้งแต่โหลดหน้าเว็บ เล่นวนลูป หรือมีหลายๆ สเต็ป (ไม่ใช่แค่ A ไป B) คุณต้องใช้ <code>@keyframes</code></p>
+<p>เราต้องกำหนดชุดของเฟรมก่อน:</p>
+<pre>@keyframes pulse-glow {
+    0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,0,0,0); }
+    50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(255,0,0,0.5); }
+    100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,0,0,0); }
+}</pre>
+<p>จากนั้นนำชื่อ <code>pulse-glow</code> ไปเรียกใช้ด้วย property <code>animation</code>:</p>
+<pre>.alert-icon {
+    /* animation: [name] [duration] [timing] [delay] [iteration-count]; */
+    animation: pulse-glow 2s ease-in-out infinite; /* เล่นลูปไม่สิ้นสุด (infinite) */
+}</pre>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip เพื่อประสิทธิภาพ (Performance):</strong> กฎทองของการทำแอนิเมชันคือ <strong>ให้ Animate เฉพาะ `transform` และ `opacity` เท่านั้น!</strong> การทำแอนิเมชันกับ property อย่าง <code>width</code>, <code>height</code>, หรือ <code>margin</code> จะทำให้เบราว์เซอร์ต้องคำนวณ Layout ใหม่ทั้งหมด (Reflow/Repaint) ทุกๆ เฟรม ซึ่งจะทำให้คอมพิวเตอร์และมือถือของผู้ใช้กระตุกและกินแบตเตอรี่มหาศาล!
+</div>

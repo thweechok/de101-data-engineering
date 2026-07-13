@@ -1,0 +1,50 @@
+<h2>ก้าวข้ามขีดจำกัดด้วย CSS Grid Layout</h2>
+<p>ในขณะที่ Flexbox เกิดมาเพื่อจัดการ Layout ใน 1 มิติ (แถว หรือ คอลัมน์ อย่างใดอย่างหนึ่ง) <strong>CSS Grid</strong> ถูกออกแบบมาสำหรับจัดการ Layout แบบ <strong>2 มิติ (ทั้งแถวและคอลัมน์พร้อมกัน)</strong> Grid เป็นเครื่องมือจัดวาง Layout ที่ทรงพลังที่สุดใน CSS ณ ปัจจุบัน สามารถสร้างตาราง กริด หรือเลย์เอาต์หน้าเว็บที่ซับซ้อนได้อย่างเป็นระเบียบและโค้ดสะอาด</p>
+
+<h2>เริ่มต้นใช้งาน Grid</h2>
+<p>เช่นเดียวกับ Flexbox คุณต้องเปลี่ยนกล่องแม่ (Parent) ให้เป็น <strong>Grid Container</strong> ด้วย <code>display: grid;</code> จากนั้นคุณจะสามารถกำหนด "เส้นกริด" เพื่อสร้างเป็นตารางขึ้นมาได้</p>
+
+<h2>สร้างโครงสร้าง: Columns และ Rows</h2>
+<p>หัวใจหลักของการสร้าง Grid คือ Property สองตัวนี้:</p>
+<ul>
+    <li><strong>grid-template-columns:</strong> กำหนดจำนวนและความกว้างของคอลัมน์</li>
+    <li><strong>grid-template-rows:</strong> กำหนดจำนวนและความสูงของแถว</li>
+</ul>
+<pre>.grid-container {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr; /* มี 3 คอลัมน์: 200px, ส่วนที่เหลือหารสอง */
+    grid-template-rows: 100px 300px; /* มี 2 แถว: 100px และ 300px */
+    gap: 20px; /* ระยะห่างระหว่างช่องกริด ทั้งแถวและคอลัมน์ */
+}</pre>
+<p><strong>หน่วย <code>fr</code> (Fractional Unit)</strong> เป็นหน่วยพิเศษสำหรับ Grid หมายถึง "สัดส่วนพื้นที่ว่างที่เหลืออยู่" ในตัวอย่างด้านบน <code>1fr 1fr</code> หมายความว่าพื้นที่ที่เหลือจาก 200px จะถูกแบ่งครึ่งเท่าๆ กัน</p>
+
+<h2>การจัดวาง Item ลงใน Grid (Grid Placement)</h2>
+<p>หลังจากสร้างโครงข่ายตารางแล้ว คุณสามารถสั่งให้ลูก (Grid Items) เข้าไปอยู่ในตำแหน่งที่ต้องการได้ โดยระบุเส้นเริ่มต้นและเส้นสิ้นสุด:</p>
+<pre>.header {
+    grid-column: 1 / 4; /* ลากตั้งแต่เส้นคอลัมน์ที่ 1 ไปจนถึงเส้นที่ 4 (กินพื้นที่ 3 คอลัมน์) */
+}
+.sidebar {
+    grid-row: 2 / 4; /* ลากตั้งแต่เส้นแถวที่ 2 ไปเส้นที่ 4 */
+}</pre>
+
+<h2>เทคนิคระดับสูง: Grid Template Areas</h2>
+<p>นี่คือฟีเจอร์ที่ทำให้ Grid พิเศษกว่าใคร คุณสามารถ "วาด" เลย์เอาต์ของคุณเป็นภาพด้วยข้อความ (ASCII Art) ผ่าน Property <code>grid-template-areas</code> ได้เลย:</p>
+<pre>.container {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "sidebar main main"
+        "footer footer footer";
+}
+
+/* แล้วกำหนดให้ลูกแต่ละตัวไปลงตามชื่อ area */
+.header { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main { grid-area: main; }
+.footer { grid-area: footer; }</pre>
+<p>วิธีนี้ทำให้โค้ดอ่านง่ายและปรับเปลี่ยน Layout สำหรับ Responsive ได้ง่ายสุดๆ เพียงแค่เปลี่ยนการเรียง "ชื่อ" ใน Media Query</p>
+
+<div class="tip-box">
+    <strong>💡 Flexbox หรือ Grid เลือกอะไรดี?</strong><br>
+    กฎง่ายๆ คือ: ใช้ <strong>Flexbox</strong> สำหรับส่วนประกอบเล็กๆ ภายในหน้า (UI Components) เช่น แถบเมนู, กลุ่มปุ่ม, หรือ Card ที่เรียงต่อกัน แต่ให้ใช้ <strong>Grid</strong> สำหรับการจัดโครงสร้างใหญ่ของหน้าเว็บ (Page Layout) เช่น การจัดวาง Header, Sidebar, Main Content, และ Footer
+</div>

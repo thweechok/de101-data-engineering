@@ -1,0 +1,14 @@
+﻿// Master registry for all courses
+export const coursesRegistry = {
+  'de101': {
+    id: 'de101',
+    emoji: '๐“',
+    title: 'DE101',
+    fullTitle: 'DE101 โ€” Data Engineering เน€เธฃเธดเนเธกเธ•เนเธเธเธฒเธเธจเธนเธเธขเน',
+    subtitle: 'Python โ’ SQL โ’ Airflow โ’ dbt โ’ BigQuery โ’ Docker',
+    desc: 'เธเธญเธฃเนเธชเธชเธณเธซเธฃเธฑเธเธเธเธญเธขเธฒเธเน€เธเนเธ Data Engineer เธเธฃเธญเธเธเธฅเธธเธก Python, SQL, Airflow, dbt, BigQuery, Docker, Spark เธ•เธฑเนเธเนเธ•เนเธจเธนเธเธขเนเธ–เธถเธเธ—เธณเธเธฒเธเนเธ”เนเธเธฃเธดเธ',
+    level: 'เน€เธฃเธดเนเธกเธ•เนเธ',
+    levelColor: '#22c55e',
+    chapterCount: 16,
+    duration: '~6 เธเธก.',
+    tag

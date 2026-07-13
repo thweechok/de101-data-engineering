@@ -1,0 +1,51 @@
+<h2>การปฏิวัติวงการ Layout: CSS Flexbox</h2>
+<p>ก่อนหน้าที่โลกจะมี <strong>Flexbox (Flexible Box Module)</strong> นักพัฒนาต้องทนทุกข์กับการใช้ Float, Table หรือ Inline-block ในการจัด Layout ซึ่งซับซ้อนและพังได้ง่าย Flexbox ถูกออกแบบมาเพื่อแก้ปัญหานี้ โดยช่วยให้เราจัดเรียงกล่อง (Elements) ใน "1 มิติ" (แถวเดียว หรือ คอลัมน์เดียว) ได้อย่างง่ายดายและยืดหยุ่น</p>
+
+<h2>Flex Container vs Flex Items</h2>
+<p>ในการใช้ Flexbox คุณต้องเริ่มจากการกำหนดให้กล่องแม่ (Parent) กลายเป็น <strong>Flex Container</strong> ด้วยคำสั่ง <code>display: flex;</code> (หรือ <code>inline-flex</code>) ทันทีที่คุณทำเช่นนั้น กล่องลูกที่อยู่ข้างใน (Children) จะกลายเป็น <strong>Flex Items</strong> และเริ่มประพฤติตามกฎของ Flexbox ทันที</p>
+
+<h2>Properties สำหรับ Flex Container (กล่องแม่)</h2>
+<ol style="padding-left:20px">
+    <li><strong>flex-direction:</strong> กำหนดทิศทางหลัก (Main Axis) ว่าจะเรียงของอย่างไร
+        <ul>
+            <li><code>row</code> (ค่าเริ่มต้น): เรียงแนวนอน จากซ้ายไปขวา</li>
+            <li><code>column</code>: เรียงแนวตั้ง จากบนลงล่าง</li>
+            <li><code>row-reverse</code> / <code>column-reverse</code>: เรียงกลับด้าน</li>
+        </ul>
+    </li>
+    <li><strong>justify-content:</strong> การจัดแนวของ Items ตามแกนหลัก (Main Axis)
+        <ul>
+            <li><code>flex-start</code>: ชิดจุดเริ่มต้น (ซ้าย หรือ บน)</li>
+            <li><code>center</code>: จัดกึ่งกลาง</li>
+            <li><code>space-between</code>: ดัน Items ไปชิดขอบสองฝั่ง และแบ่งช่องว่างตรงกลางให้เท่าๆ กัน (ใช้บ่อยในการทำ Navbar)</li>
+            <li><code>space-around</code> / <code>space-evenly</code>: แบ่งช่องว่างรอบๆ Items แต่ละตัว</li>
+        </ul>
+    </li>
+    <li><strong>align-items:</strong> การจัดแนวของ Items ตามแกนรอง (Cross Axis)
+        <ul>
+            <li><code>stretch</code> (ค่าเริ่มต้น): ยืดให้เต็มความสูง/กว้าง ของ Container</li>
+            <li><code>center</code>: จัดกึ่งกลางในแนวแกนรอง (มีประโยชน์มากในการจัดให้อยู่ตรงกลางเป๊ะๆ)</li>
+            <li><code>flex-start</code> / <code>flex-end</code>: ชิดจุดเริ่มต้น หรือ จุดสิ้นสุดของแกนรอง</li>
+        </ul>
+    </li>
+    <li><strong>flex-wrap:</strong> หากพื้นที่ไม่พอ จะให้ Items บีบตัวเองหรือปัดตกบรรทัดใหม่
+        <ul>
+            <li><code>nowrap</code> (ค่าเริ่มต้น): บีบให้พอในบรรทัดเดียว</li>
+            <li><code>wrap</code>: ถ้าที่เต็ม ให้ปัดตกไปบรรทัดใหม่</li>
+        </ul>
+    </li>
+</ol>
+
+<h2>Properties สำหรับ Flex Items (กล่องลูก)</h2>
+<p>คุณยังสามารถควบคุมลูกแต่ละตัวแยกกันได้ด้วย:</p>
+<ul>
+    <li><strong>flex-grow:</strong> อัตราการ "ขยายตัว" เพื่อเติมเต็มพื้นที่ที่เหลืออยู่ (เช่น <code>flex-grow: 1;</code> หมายถึง ให้ยืดกินพื้นที่ที่เหลือทั้งหมด)</li>
+    <li><strong>flex-shrink:</strong> อัตราการ "หดตัว" เมื่อพื้นที่ไม่พอ</li>
+    <li><strong>flex-basis:</strong> ขนาดเริ่มต้นของ Item ก่อนที่ grow หรือ shrink จะทำงาน (คล้ายๆ width)</li>
+    <li><strong>order:</strong> เปลี่ยนลำดับการแสดงผลของ Item โดยไม่ต้องไปสลับใน HTML (ค่าเริ่มต้นคือ 0)</li>
+</ul>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> การจัด Element ให้อยู่กึ่งกลางหน้าจอแบบ Perfect Center (ทั้งแกน X และ Y) ที่ง่ายที่สุดในโลกคือการใช้: <br>
+    <code>display: flex; justify-content: center; align-items: center;</code> ในกล่องแม่!
+</div>

@@ -1,0 +1,57 @@
+<h2>CSS Custom Properties (ตัวแปรใน CSS)</h2>
+<p>ในอดีต หากเว็บไซต์ของคุณมี "สีหลัก (Primary Color)" ที่ใช้ในปุ่ม 50 แห่ง, ข้อความ 20 แห่ง, และขอบ 30 แห่ง เมื่อดีไซเนอร์ขอเปลี่ยนสี คุณต้องตามหาแก้โค้ดถึง 100 จุด (หาและแทนที่) ปัญหานี้ได้รับการแก้ไขด้วย <strong>CSS Variables</strong> (หรือชื่ออย่างเป็นทางการคือ Custom Properties)</p>
+
+<h2>การสร้างและเรียกใช้งาน (Syntax)</h2>
+<p>ตัวแปรใน CSS จะขึ้นต้นด้วยขีดสองอัน (<code>--</code>) เสมอ เรามักจะประกาศตัวแปรไว้ใน <code>:root</code> (ซึ่งเทียบเท่ากับแท็ก <code>&lt;html&gt;</code>) เพื่อให้สามารถเรียกใช้ได้แบบ Global (ทุกที่ในเว็บไซต์)</p>
+<pre>:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --text-dark: #333333;
+    --bg-light: #f4f4f4;
+    --spacing-md: 16px;
+    --radius: 8px;
+}</pre>
+<p>เมื่อต้องการนำไปใช้ เราจะใช้ฟังก์ชัน <code>var()</code> และใส่ชื่อตัวแปรลงไป:</p>
+<pre>.button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--spacing-md);
+    border-radius: var(--radius);
+}</pre>
+
+<h2>พลังของการเขียนทับ (Cascading Variables)</h2>
+<p>แม้จะชื่อว่า "ตัวแปร Global" แต่เราสามารถเปลี่ยนค่าของตัวแปรในขอบเขต (Scope) เฉพาะเจาะจงได้ ซึ่งเป็นจุดที่ CSS Variables ทรงพลังกว่าตัวแปรใน Sass (SCSS) ตัวอย่างเช่น คุณสามารถเปลี่ยนค่าตัวแปรเฉพาะใน Section หนึ่งได้:</p>
+<pre>.card.highlight {
+    /* เปลี่ยนสีหลักเฉพาะข้างใน card ที่มีคลาส highlight */
+    --primary-color: #e74c3c; 
+}
+/* ปุ่มที่อยู่ใน card.highlight จะกลายเป็นสีแดงอัตโนมัติ โดยไม่ต้องเขียนคลาสปุ่มใหม่ */</pre>
+
+<h2>การทำ Dark Mode อย่างง่ายดาย</h2>
+<p>Use Case ที่ทำให้ CSS Variables เปล่งประกายที่สุดคือการทำ <strong>ธีม (Theming) และ Dark Mode</strong> แทนที่คุณจะเขียน CSS ใหม่ทั้งหมดสำหรับ Dark Mode คุณแค่เพียง "เปลี่ยนค่าของตัวแปร" เมื่อหน้าจอหรือคลาสเปลี่ยนไป</p>
+<pre>/* สีสำหรับ Light Mode (ค่าเริ่มต้น) */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #121212;
+    --border-color: #cccccc;
+}
+
+/* สีสำหรับ Dark Mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --text-color: #ffffff;
+        --border-color: #333333;
+    }
+}
+
+/* นำไปใช้ในโค้ด (ไม่ต้องสนใจว่าเป็นโหมดอะไร) */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}</pre>
+<p>ในตัวอย่างด้านบน เราใช้ Media Query <code>@media (prefers-color-scheme: dark)</code> ซึ่งจะเช็คว่าผู้ใช้ตั้งค่า OS ของโทรศัพท์หรือคอมพิวเตอร์เป็น Dark Mode หรือไม่ ถ้าใช่ เว็บคุณจะกลายเป็น Dark Mode อัตโนมัติทันที!</p>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> ฟังก์ชัน <code>var()</code> รับพารามิเตอร์ตัวที่ 2 เพื่อทำเป็นค่า <strong>Fallback (ค่าเผื่อสำรอง)</strong> ได้ เช่น <code>color: var(--theme-color, #000);</code> หมายความว่า ถ้ายังไม่ได้ประกาศ <code>--theme-color</code> ให้ใช้สีดำ (<code>#000</code>) ไปก่อน ป้องกันเว็บพัง!
+</div>

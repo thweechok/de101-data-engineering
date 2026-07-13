@@ -1,327 +1,463 @@
 'use client';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { chapters } from '@/data/chapters-index';
+import { useState } from 'react';
+import CourseThumbnail from '@/components/CourseThumbnail';
+import SearchBar from '@/components/SearchBar';
+import { coursesRegistry } from '@/data/courses-registry';
 
-const courses = [
-  {
-    id: 'de101',
-    order: 1,
-    emoji: '🎓',
-    title: 'DE101 — Data Engineering เริ่มต้นจากศูนย์',
-    subtitle: 'พื้นฐาน → Core → Modern Stack → Career',
-    desc: 'คอร์สสำหรับคนที่อยากเป็น Data Engineer แต่ไม่รู้จะเริ่มยังไง ครอบคลุมตั้งแต่ Python, SQL, Data Modeling ไปจนถึง Airflow, dbt, BigQuery, Docker, Spark',
-    chapters: 16,
-    duration: '~6 ชม.',
-    level: 'เริ่มต้น',
-    levelColor: '#10b981',
-    status: 'active',
-    link: '/',
-    group: 'main',
-    tags: ['Python', 'SQL', 'Airflow', 'dbt', 'BigQuery', 'Docker', 'Spark'],
-    features: ['📖 16 บทเรียน', '🧪 48 ข้อสอบ', '📋 Cheat Sheets', '🏆 Certificate'],
-    prereq: 'ไม่ต้องมีพื้นฐาน',
-  },
-  {
-    id: 'sql-mastery',
-    order: 2,
-    emoji: '🗄️',
-    title: 'SQL Mastery — เก่ง SQL สุดทาง',
-    subtitle: 'Basic → Advanced → Performance → Interview',
-    desc: 'คอร์สเฉพาะทางสำหรับคนอยากเก่ง SQL จริงๆ ตั้งแต่ SELECT ไปจนถึง Window Functions, CTEs, Query Optimization',
-    chapters: 10,
-    duration: '~5 ชม.',
-    level: 'เริ่มต้น-กลาง',
-    levelColor: '#06b6d4',
-    status: 'active',
-    link: '/courses/sql-mastery',
-    group: 'skill',
-    tags: ['SQL', 'Window Functions', 'CTE', 'Optimization', 'Interview'],
-    features: ['📖 10 บทเรียน', '💻 100+ แบบฝึกหัด', '🎯 Interview Prep'],
-    prereq: 'เรียน DE101 บทที่ 4 (SQL) ก่อน',
-  },
-  {
-    id: 'python-de',
-    order: 3,
-    emoji: '🐍',
-    title: 'Python for Data Engineering',
-    subtitle: 'OOP → Async → Testing → Production Code',
-    desc: 'เจาะลึก Python สำหรับสาย Data ครอบคลุม OOP, Async, Testing, Design Patterns, Production-grade code',
-    chapters: 10,
-    duration: '~6 ชม.',
-    level: 'กลาง',
-    levelColor: '#f59e0b',
-    status: 'active',
-    link: '/courses/python-de',
-    group: 'skill',
-    tags: ['Python', 'OOP', 'Async', 'pytest', 'Design Patterns'],
-    features: ['📖 10 บทเรียน', '🐍 Mini Projects', '🧪 Unit Tests'],
-    prereq: 'เรียน DE101 บทที่ 3 (Python) ก่อน',
-  },
-  {
-    id: 'de201',
-    order: 4,
-    emoji: '🚀',
-    title: 'DE201 — Intermediate Data Engineering',
-    subtitle: 'Streaming → Advanced Tools → Cloud → CI/CD',
-    desc: 'ยกระดับจาก Junior สู่ Mid-level DE เจาะลึก Kafka, Advanced Airflow, Cloud Architecture, CI/CD สำหรับ Data Pipeline',
-    chapters: 10,
-    duration: '~8 ชม.',
-    level: 'กลาง',
-    levelColor: '#3b82f6',
-    status: 'active',
-    link: '/courses/de201',
-    group: 'main',
-    tags: ['Kafka', 'Streaming', 'Advanced Airflow', 'Terraform', 'GCP', 'CI/CD'],
-    features: ['📖 10 บทเรียน', '🔥 Hands-on Labs', '☁️ Cloud Projects'],
-    prereq: 'เรียน DE101 จบก่อน',
-  },
-  {
-    id: 'kafka101',
-    order: 5,
-    emoji: '🔥',
-    title: 'Kafka 101 — Real-time Streaming จากศูนย์',
-    subtitle: 'Producer → Consumer → Streams → Connect',
-    desc: 'เรียนรู้ Apache Kafka ตั้งแต่เริ่มต้น ทำ Real-time Data Pipeline, Event-driven Architecture',
-    chapters: 8,
-    duration: '~5 ชม.',
-    level: 'กลาง',
-    levelColor: '#ef4444',
-    status: 'active',
-    link: '/courses/kafka101',
-    group: 'skill',
-    tags: ['Kafka', 'Streaming', 'Event-driven', 'Real-time', 'Microservices'],
-    features: ['📖 8 บทเรียน', '🔥 Live Demo', '🏗️ Projects'],
-    prereq: 'เรียน DE101 + Python เสริม ก่อน',
-  },
-  {
-    id: 'gcp-cert',
-    order: 6,
-    emoji: '☁️',
-    title: 'GCP Data Engineer Certification Prep',
-    subtitle: 'เตรียมสอบ Google Cloud Professional Data Engineer',
-    desc: 'เตรียมสอบ GCP DE Certification ครบจบในคอร์สเดียว พร้อม Practice Exam และเทคนิคทำข้อสอบ',
-    chapters: 10,
-    duration: '~8 ชม.',
-    level: 'กลาง-สูง',
-    levelColor: '#4285f4',
-    status: 'active',
-    link: '/courses/gcp-cert',
-    group: 'cert',
-    tags: ['GCP', 'BigQuery', 'Dataflow', 'Pub/Sub', 'Certification'],
-    features: ['📖 10 บทเรียน', '📝 Practice Exams', '☁️ GCP Labs'],
-    prereq: 'เรียน DE201 ก่อนจะเข้าใจง่ายขึ้น',
-  },
-  {
-    id: 'de301',
-    order: 7,
-    emoji: '💎',
-    title: 'DE301 — Advanced & Senior Level',
-    subtitle: 'Architecture → ML Ops → Enterprise → Leadership',
-    desc: 'สำหรับคนที่อยากก้าวสู่ Senior DE / Staff Engineer เรียนรู้ Lakehouse, Data Mesh, ML Engineering, Enterprise System Design',
-    chapters: 8,
-    duration: '~10 ชม.',
-    level: 'สูง',
-    levelColor: '#8b5cf6',
-    status: 'active',
-    link: '/courses/de301',
-    group: 'main',
-    tags: ['Data Mesh', 'Lakehouse', 'Delta Lake', 'MLOps', 'System Design'],
-    features: ['📖 8 บทเรียน', '🏗️ Architecture Labs', '🎤 Mock Interviews'],
-    prereq: 'เรียน DE201 + มีประสบการณ์ 1-2 ปี',
-  },
-  {
-    id: 'interview',
-    order: 8,
-    emoji: '🎤',
-    title: 'DE Interview Bootcamp',
-    subtitle: '30 วัน เตรียมสัมภาษณ์ Data Engineer',
-    desc: 'เตรียมตัวสัมภาษณ์งาน DE อย่างเข้มข้น SQL challenges, System Design, Behavioral questions, Resume review',
-    chapters: 8,
-    duration: '~4 ชม.',
-    level: 'ทุกระดับ',
-    levelColor: '#ec4899',
-    status: 'active',
-    link: '/courses/interview',
-    group: 'career',
-    tags: ['Interview', 'SQL Challenge', 'System Design', 'Resume', 'Portfolio'],
-    features: ['📖 8 บทเรียน', '🎯 50+ คำถาม', '📄 Resume Template'],
-    prereq: 'เรียนตอนพร้อมหางาน',
-  },
-  {
-    id: '10phase-de',
-    order: 9,
-    emoji: '🗺️',
-    title: '10 Phase สู่การเป็น Data Engineer',
-    subtitle: 'Career → SQL → Python → Storage → Pipeline → Portfolio',
-    desc: 'คอร์สครบวงจร 10 Phase ครอบคลุมทุกทักษะที่ต้องรู้ ตั้งแต่ Career Overview, SQL, Python, Storage, ETL, Orchestration, Infra, Data Modeling ไปจนถึง Portfolio & Interview',
-    chapters: 11,
-    duration: '~10 ชม.',
-    level: 'เริ่มต้น-สูง',
-    levelColor: '#10b981',
-    status: 'active',
-    link: '/courses/10phase-de',
-    group: 'main',
-    tags: ['SQL', 'Python', 'Spark', 'Kafka', 'Airflow', 'dbt', 'Cloud', 'Interview'],
-    features: ['📖 11 บทเรียน', '💻 โค้ดจริงทุกบท', '🏆 ครบจบในคอร์สเดียว'],
-    prereq: 'ไม่ต้องมีพื้นฐาน',
-  },
+// Extra metadata not stored in registry (order, group, rating, students)
+const extraMeta = {
+  'de101':                  { order:  1, group: 'de',   rating: 4.9, students: 2840 },
+  'sql-mastery':            { order:  2, group: 'de',   rating: 4.8, students: 1930 },
+  'python-de':              { order:  3, group: 'de',   rating: 4.8, students: 1620 },
+  'de201':                  { order:  4, group: 'de',   rating: 4.9, students: 1180 },
+  'kafka101':               { order:  5, group: 'de',   rating: 4.7, students:  870 },
+  'gcp-cert':               { order:  6, group: 'de',   rating: 4.8, students:  720 },
+  'de301':                  { order:  7, group: 'de',   rating: 4.9, students:  540 },
+  '10phase-de':             { order:  8, group: 'de',   rating: 4.8, students: 1350 },
+  'interview':              { order:  9, group: 'de',   rating: 4.9, students: 2100 },
+  'line101':                { order: 10, group: 'line', rating: 4.7, students:  960 },
+  'line-google':            { order: 11, group: 'line', rating: 4.8, students: 1240 },
+  'flex-master':            { order: 12, group: 'line', rating: 4.7, students:  680 },
+  'line-ai':                { order: 13, group: 'line', rating: 4.9, students: 1050 },
+  'liff-builder':           { order: 14, group: 'line', rating: 4.8, students:  590 },
+  'line-autopilot':         { order: 15, group: 'line', rating: 4.8, students: 1490 },
+  'line-shop':              { order: 16, group: 'line', rating: 4.7, students:  780 },
+  'line-pay':               { order: 17, group: 'line', rating: 4.8, students:  440 },
+  'line-workshop':          { order: 18, group: 'line', rating: 4.9, students:  620 },
+  'antigravity':            { order: 19, group: 'ai',   rating: 4.9, students: 1450 },
+  'vscode-mastery':         { order: 20, group: 'ai',   rating: 4.8, students: 3100 },
+  'notebooklm':             { order: 21, group: 'ai',   rating: 4.8, students: 1740 },
+  'claude-ai':              { order: 22, group: 'ai',   rating: 4.9, students:  890 },
+  'ads-mastery':            { order: 23, group: 'ecom', rating: 4.8, students: 1120 },
+  'weather-canvas':         { order: 24, group: 'ecom', rating: 4.7, students:  560 },
+  'chatgpt-pro':            { order: 25, group: 'ai',   rating: 4.9, students: 1200 },
+  'google-analytics':       { order: 26, group: 'ai',   rating: 4.8, students:  980 },
+  'canva-seller':           { order: 27, group: 'ecom', rating: 4.8, students:  870 },
+  'line-oa-pro':            { order: 28, group: 'line', rating: 4.8, students:  760 },
+  'tiktok-content':         { order: 29, group: 'ecom', rating: 4.9, students: 1100 },
+  'codex-mastery':          { order: 30, group: 'ai',   rating: 4.9, students:  920 },
+  'claude-ecosystem':       { order: 31, group: 'ai',   rating: 4.9, students:  850 },
+  'uxui-design':            { order: 32, group: 'ai',   rating: 4.9, students:  780 },
+  'n8n-automation':         { order: 33, group: 'ai',   rating: 4.9, students:  890 },
+  'facebook-ads':           { order: 34, group: 'ecom', rating: 4.8, students: 1050 },
+  'power-bi':               { order: 35, group: 'de',   rating: 4.8, students:  760 },
+  'excel-business':         { order: 36, group: 'de',   rating: 4.8, students: 1320 },
+  'python-automation':      { order: 37, group: 'de',   rating: 4.9, students:  980 },
+  'tiktok-shop-setup':      { order: 38, group: 'ecom', rating: 4.8, students: 1100 },
+  'prompt-engineering':     { order: 39, group: 'ai',   rating: 4.9, students:  870 },
+  'notion-ai':              { order: 40, group: 'ai',   rating: 4.8, students:  650 },
+  'dbt-mastery':            { order: 41, group: 'de',   rating: 4.9, students:  720 },
+  'docker-de':              { order: 42, group: 'de',   rating: 4.8, students:  680 },
+  'airflow-advanced':       { order: 43, group: 'de',   rating: 4.9, students:  560 },
+  'pyspark-mastery':        { order: 44, group: 'de',   rating: 4.9, students:  490 },
+  'databricks-fundamentals':{ order: 45, group: 'de',   rating: 4.8, students:  430 },
+  'terraform-de':           { order: 46, group: 'de',   rating: 4.8, students:  380 },
+  'aws-data-engineer':      { order: 47, group: 'de',   rating: 4.8, students:  510 },
+  'azure-data-engineer':    { order: 48, group: 'de',   rating: 4.8, students:  420 },
+  'apache-flink':           { order: 49, group: 'de',   rating: 4.9, students:  310 },
+  'medallion-architecture': { order: 50, group: 'de',   rating: 4.9, students:  350 },
+  'data-quality':           { order: 51, group: 'de',   rating: 4.8, students:  460 },
+  'data-catalog':           { order: 52, group: 'de',   rating: 4.8, students:  290 },
+  'de-portfolio':           { order: 53, group: 'de',   rating: 4.9, students:  840 },
+  'freelance-de':           { order: 54, group: 'de',   rating: 4.9, students:  720 },
+  'de-system-design':       { order: 55, group: 'de',   rating: 4.9, students:  380 },
+  'sql-for-da':             { order: 56, group: 'da',   rating: 4.9, students: 1150 },
+  'python-da':              { order: 57, group: 'da',   rating: 4.8, students:  980 },
+  'tableau':                { order: 58, group: 'da',   rating: 4.8, students:  860 },
+  'statistics-da':          { order: 59, group: 'da',   rating: 4.8, students:  720 },
+  'da-career':              { order: 60, group: 'da',   rating: 4.9, students: 1320 },
+  'tiktok-ads-pro':         { order: 61, group: 'ecom', rating: 4.9, students:  890 },
+  'shopee-ads-pro':         { order: 62, group: 'ecom', rating: 4.9, students:  760 },
+  'lazada-ads-pro':         { order: 63, group: 'ecom', rating: 4.8, students:  540 },
+  // Software Engineering
+  'sw-fundamentals':        { order:  64, group: 'sw', rating: 4.8, students:  920 },
+  'sw-git':                 { order:  65, group: 'sw', rating: 4.9, students:  780 },
+  'sw-thinking':            { order:  66, group: 'sw', rating: 4.8, students:  650 },
+  'sw-html-css':            { order:  67, group: 'sw', rating: 4.9, students: 1150 },
+  'sw-javascript':          { order:  68, group: 'sw', rating: 4.9, students: 1340 },
+  'sw-javascript-advanced': { order:  69, group: 'sw', rating: 4.8, students:  720 },
+  'sw-react':               { order:  70, group: 'sw', rating: 4.9, students: 1580 },
+  'sw-nextjs':              { order:  71, group: 'sw', rating: 4.9, students:  980 },
+  'sw-typescript':          { order:  72, group: 'sw', rating: 4.8, students:  850 },
+  'sw-python-backend':      { order:  73, group: 'sw', rating: 4.8, students:  760 },
+  'sw-fastapi':             { order:  74, group: 'sw', rating: 4.9, students:  680 },
+  'sw-nodejs':              { order:  75, group: 'sw', rating: 4.8, students:  920 },
+  'sw-sql':                 { order:  76, group: 'sw', rating: 4.9, students: 1100 },
+  'sw-nosql-cache':         { order:  77, group: 'sw', rating: 4.8, students:  540 },
+  'sw-auth-security':       { order:  78, group: 'sw', rating: 4.9, students:  640 },
+  'sw-flutter':             { order:  79, group: 'sw', rating: 4.9, students:  870 },
+  'sw-flutter-state':       { order:  80, group: 'sw', rating: 4.8, students:  490 },
+  'sw-docker':              { order:  81, group: 'sw', rating: 4.9, students:  820 },
+  'sw-cicd':                { order:  82, group: 'sw', rating: 4.8, students:  580 },
+  'sw-aws':                 { order:  83, group: 'sw', rating: 4.8, students:  720 },
+  'sw-linux-k8s':           { order:  84, group: 'sw', rating: 4.8, students:  490 },
+  'sw-system-design':       { order:  85, group: 'sw', rating: 4.9, students:  960 },
+  'sw-clean-code':          { order:  86, group: 'sw', rating: 4.9, students:  750 },
+  'sw-microservices':       { order:  87, group: 'sw', rating: 4.9, students:  480 },
+  'sw-testing':             { order:  88, group: 'sw', rating: 4.8, students:  560 },
+  'sw-dsa':                 { order:  89, group: 'sw', rating: 4.9, students: 1280 },
+  'sw-coding-interview':    { order:  90, group: 'sw', rating: 4.9, students: 1450 },
+  'sw-junior-roadmap':      { order:  91, group: 'sw', rating: 4.9, students:  890 },
+  // AI Engineer
+  'ai-engineer':            { order:  92, group: 'ai', rating: 4.9, students:  650 },
+};
+
+// Build allCourses from registry (correct Thai text) + extraMeta
+const allCourses = Object.entries(coursesRegistry)
+  .map(([id, c]) => {
+    const meta = extraMeta[id] || { order: 99, group: 'de', rating: 4.8, students: 500 };
+    return {
+      id,
+      order: meta.order,
+      emoji: c.emoji || '',
+      group: meta.group,
+      title: c.fullTitle || c.title || id,
+      desc: c.desc || '',
+      chapters: c.chapterCount || 0,
+      duration: c.duration || '',
+      level: c.level || '',
+      levelColor: c.levelColor || '#8b5cf6',
+      link: '/courses/' + id,
+      tags: c.tags || [],
+      rating: meta.rating,
+      students: meta.students,
+    };
+  })
+  .sort((a, b) => a.order - b.order);
+
+const filterGroups = [
+  { key: 'all',  label: '✨ ทั้งหมด' },
+  { key: 'de',   label: 'Data Engineering' },
+  { key: 'da',   label: 'Data Analyst' },
+  { key: 'sw',   label: 'Software Dev' },
+  { key: 'line', label: 'LINE API' },
+  { key: 'ai',   label: 'AI Tools' },
+  { key: 'ecom', label: 'E-Commerce' },
 ];
 
+function Stars({ r }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+      {[1,2,3,4,5].map(i => (
+        <span key={i} style={{ color: i <= Math.floor(r) ? '#f59e0b' : '#374151', fontSize: '0.68rem' }}>★</span>
+      ))}
+      <span style={{ color: '#f59e0b', fontSize: '0.7rem', fontWeight: 700, marginLeft: 3 }}>{r}</span>
+    </span>
+  );
+}
+
+/* ── Mobile card (2-col grid) with cover image ── */
+function MobileCourseCard({ c }) {
+  const [pressed, setPressed] = useState(false);
+  return (
+    <Link href={c.link} style={{ textDecoration: 'none', color: 'inherit' }}
+      onTouchStart={() => setPressed(true)} onTouchEnd={() => setPressed(false)}
+      onMouseEnter={() => setPressed(true)} onMouseLeave={() => setPressed(false)}>
+      <div style={{
+        background: 'var(--glass)',
+        border: `1.5px solid ${pressed ? c.levelColor + '55' : 'var(--border)'}`,
+        borderRadius: 16, overflow: 'hidden',
+        transform: pressed ? 'scale(0.97)' : 'scale(1)',
+        transition: 'all 0.18s cubic-bezier(.4,0,.2,1)',
+        boxShadow: pressed ? `0 4px 20px ${c.levelColor}33` : 'none',
+      }}>
+        {/* Cover image compact */}
+        <CourseThumbnail course={c} compact={true} />
+        {/* Card body */}
+        <div style={{ padding: '10px 12px 13px' }}>
+          <div style={{
+            fontSize: '0.8rem', fontWeight: 700, lineHeight: 1.35,
+            marginBottom: 7, color: 'var(--text)',
+            display: '-webkit-box', WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          }}>{c.emoji} {c.title}</div>
+          <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{
+              fontSize: '0.58rem', padding: '2px 8px', borderRadius: 8, fontWeight: 700,
+              background: `${c.levelColor}18`, color: c.levelColor,
+              border: `1px solid ${c.levelColor}28`,
+            }}>{c.level}</span>
+            <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>📖 {c.chapters} บท</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/* ── Desktop grid card ── */
+function DesktopCard({ c }) {
+  return (
+    <Link href={c.link} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <div className="course-grid-card" style={{
+        background: 'var(--glass)', border: '1px solid var(--border)',
+        borderRadius: 18, overflow: 'hidden', height: '100%',
+        display: 'flex', flexDirection: 'column',
+        transition: 'all 0.25s', cursor: 'pointer',
+      }}>
+        <CourseThumbnail course={c} />
+        <div style={{ padding: '14px 16px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 7 }}>
+            <span style={{ fontSize: '1.5rem', lineHeight: 1, flexShrink: 0 }}>{c.emoji}</span>
+            <h2 style={{
+              fontSize: '0.88rem', fontWeight: 700, lineHeight: 1.35, margin: 0,
+              display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+            }}>{c.title}</h2>
+          </div>
+          <p style={{
+            fontSize: '0.74rem', color: 'var(--text-dim)', lineHeight: 1.55,
+            marginBottom: 10, flex: 1,
+            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          }}>{c.desc}</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
+            {c.tags.slice(0,3).map(t => (
+              <span key={t} style={{
+                fontSize: '0.6rem', fontWeight: 600, padding: '2px 8px', borderRadius: 8,
+                background: 'var(--glass2)', border: '1px solid var(--border)', color: 'var(--text-muted)',
+              }}>{t}</span>
+            ))}
+            {c.tags.length > 3 && <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', padding: '2px 4px' }}>+{c.tags.length-3}</span>}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+            <Stars r={c.rating} />
+            <span style={{ fontSize: '0.67rem', color: 'var(--text-muted)' }}>👥 {c.students.toLocaleString()}</span>
+          </div>
+          <div style={{
+            display: 'flex', gap: 10, fontSize: '0.67rem', color: 'var(--text-muted)',
+            marginBottom: 13, borderTop: '1px solid var(--border)', paddingTop: 10,
+          }}>
+            <span>📖 {c.chapters} บท</span>
+            <span>⏱️ {c.duration}</span>
+            <span style={{ marginLeft: 'auto', color: '#22c55e', fontWeight: 700 }}>ฟรี!</span>
+          </div>
+          <div className="cta-btn" style={{
+            textAlign: 'center', padding: '10px 0', borderRadius: 11,
+            background: `linear-gradient(135deg,${c.levelColor},${c.levelColor}bb)`,
+            color: '#fff', fontSize: '0.82rem', fontWeight: 700,
+            boxShadow: `0 4px 12px ${c.levelColor}44`,
+          }}>🚀 เริ่มเรียนเลย</div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 const groupLabels = {
-  main: { label: '📘 คอร์สหลัก — เรียนตามลำดับ', color: 'var(--blue)' },
-  skill: { label: '🔧 คอร์สเสริมทักษะ — เรียนเมื่อพร้อม', color: 'var(--cyan)' },
-  cert: { label: '📜 คอร์สเตรียมสอบ', color: 'var(--green)' },
-  career: { label: '🎯 คอร์สเตรียมสัมภาษณ์', color: 'var(--pink)' },
+  de: { label: '📊 Data Engineering', color: '#8b5cf6' },
+  da: { label: '🔍 Data Analyst', color: '#06b6d4' },
+  sw: { label: '💻 Software Dev', color: '#6366f1' },
+  line: { label: '💬 LINE API', color: '#22c55e' },
+  ai: { label: '🤖 AI Tools', color: '#f59e0b' },
+  ecom: { label: '🛒 E-Commerce', color: '#ef4444' },
 };
 
 export default function CoursesPage() {
-  const [completed, setCompleted] = useState([]);
+  const [activeGroup, setActiveGroup] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
 
+  const { useEffect } = require('react');
   useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('de101-progress') || '[]');
-      setCompleted(saved);
-    } catch {}
+    const check = () => setIsMobile(window.innerWidth < 680);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
-  const de101Progress = chapters.length > 0 ? Math.round((completed.length / chapters.length) * 100) : 0;
+  const searchFiltered = searchQuery.trim()
+    ? allCourses.filter(c => {
+        const q = searchQuery.toLowerCase();
+        return (
+          c.title.toLowerCase().includes(q) ||
+          c.desc.toLowerCase().includes(q) ||
+          c.tags.some(t => t.toLowerCase().includes(q))
+        );
+      })
+    : null;
+
+  const filtered = searchFiltered !== null
+    ? searchFiltered
+    : (activeGroup === 'all' ? allCourses : allCourses.filter(c => c.group === activeGroup));
+
+  const totalStudents = allCourses.reduce((a, c) => a + (c.students || 0), 0);
+
+  const groupedFiltered = activeGroup === 'all' && !searchQuery.trim()
+    ? Object.entries(groupLabels).map(([key, meta]) => ({
+        key, meta,
+        courses: allCourses.filter(c => c.group === key),
+      })).filter(g => g.courses.length > 0)
+    : null;
 
   return (
-    <div className="content-wrapper">
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: 8 }}>
-            📚 All Courses
-          </h1>
-          <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', maxWidth: 500, margin: '0 auto 16px' }}>
-            คอร์ส Data Engineering ภาษาไทย เรียนฟรี ครบทุกทักษะที่ต้องใช้จริง
-          </p>
-        </div>
+    <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '0 16px 80px' : '0 20px 80px' }}>
 
-        {/* Learning Path Visual */}
-        <div style={{
-          background: 'var(--glass)', border: '1px solid var(--border)',
-          borderRadius: 'var(--radius)', padding: '20px 24px', marginBottom: 32,
-        }}>
-          <h3 style={{ fontSize: '0.92rem', fontWeight: 700, marginBottom: 12 }}>
-            🗺️ แนะนำลำดับการเรียน
-          </h3>
-          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 4, fontSize: '0.75rem' }}>
-            {courses.map((c, i) => (
-              <span key={c.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                <Link href={c.link} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 4,
-                  padding: '4px 10px', borderRadius: 16,
-                  background: c.group === 'main' ? 'var(--blue-dim)' : 'var(--glass2)',
-                  border: `1px solid ${c.group === 'main' ? 'var(--blue-border)' : 'var(--border)'}`,
-                  color: c.group === 'main' ? 'var(--blue)' : 'var(--text-dim)',
-                  textDecoration: 'none', fontWeight: 600, transition: 'all 0.2s',
-                  whiteSpace: 'nowrap',
-                }}>
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                    width: 18, height: 18, borderRadius: '50%',
-                    background: c.levelColor, color: '#fff', fontSize: '0.6rem', fontWeight: 800,
-                  }}>{c.order}</span>
-                  {c.emoji} {c.id === 'de101' ? 'DE101' : c.id === 'sql-mastery' ? 'SQL' : c.id === 'python-de' ? 'Python' : c.id === 'de201' ? 'DE201' : c.id === 'kafka101' ? 'Kafka' : c.id === 'gcp-cert' ? 'GCP' : c.id === 'de301' ? 'DE301' : 'Interview'}
-                </Link>
-                {i < courses.length - 1 && <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>→</span>}
-              </span>
-            ))}
+      {/* Hero */}
+      <div style={{ textAlign: 'center', padding: isMobile ? '28px 0 20px' : '48px 0 32px' }}>
+        <Link href="/dashboard" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: '5px 16px', borderRadius: 20,
+          background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)',
+          color: '#a78bfa', fontSize: '0.74rem', fontWeight: 600,
+          textDecoration: 'none', marginBottom: 14, transition: 'all 0.2s',
+        }}>📊 ดูความก้าวหน้าของฉัน →</Link>
+        <h1 className="hero-title-shimmer" style={{
+          fontSize: isMobile ? '2rem' : 'clamp(2rem,5vw,3.2rem)',
+          fontWeight: 900, lineHeight: 1.15, marginBottom: 10,
+        }}>เรียนฟรี ทุกคอร์ส</h1>
+        <p style={{ color: 'var(--text-dim)', fontSize: isMobile ? '0.85rem' : '1rem', maxWidth: 520, margin: '0 auto' }}>
+          Data Engineering · LINE API · AI Tools · E-Commerce
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, auto)',
+        gap: isMobile ? 10 : 40,
+        justifyContent: isMobile ? 'stretch' : 'center',
+        marginBottom: isMobile ? 24 : 36,
+      }}>
+        {[
+          { val: allCourses.length, lbl: 'คอร์ส', color: '#8b5cf6', icon: '📚' },
+          { val: allCourses.reduce((a,c)=>a+c.chapters,0), lbl: 'บทเรียน', color: '#22c55e', icon: '📖' },
+          { val: Math.round(totalStudents/1000)+'K+', lbl: 'ผู้เรียน', color: '#3b82f6', icon: '👥' },
+          { val: '100%', lbl: 'ฟรี', color: '#f59e0b', icon: '🎁' },
+        ].map(s => (
+          <div key={s.lbl} className="stat-number" style={{
+            textAlign: 'center',
+            background: isMobile ? 'var(--glass)' : 'transparent',
+            border: isMobile ? '1px solid var(--border)' : 'none',
+            borderRadius: isMobile ? 14 : 0,
+            padding: isMobile ? '12px 8px' : 0,
+          }}>
+            {isMobile && <div style={{ fontSize: '1.1rem', marginBottom: 2 }}>{s.icon}</div>}
+            <div style={{ fontSize: isMobile ? '1.4rem' : '1.8rem', fontWeight: 900, color: s.color }}>{s.val}</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>{s.lbl}</div>
           </div>
-          <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: 8 }}>
-            💡 <strong>คอร์สหลัก</strong> (สีน้ำเงิน) เรียนตามลำดับ · <strong>คอร์สเสริม</strong> เรียนเมื่อพร้อม
-          </p>
-        </div>
+        ))}
+      </div>
 
-        {/* Course List — Ordered */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {courses.map((course, i) => (
-            <div
-              key={course.id}
-              className="course-card"
-              style={{ animationDelay: `${i * 0.06}s`, position: 'relative' }}
-            >
-              {/* Order Number Badge */}
-              <div style={{
-                position: 'absolute', top: -10, left: -10,
-                width: 32, height: 32, borderRadius: '50%',
-                background: `linear-gradient(135deg, ${course.levelColor}, ${course.levelColor}88)`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#fff', fontSize: '0.82rem', fontWeight: 800,
-                boxShadow: `0 2px 8px ${course.levelColor}44`,
-                zIndex: 2, border: '2px solid var(--bg)',
+      {/* Search Bar */}
+      <SearchBar onSearch={setSearchQuery} totalCount={filtered.length} />
+
+      {/* Filter buttons */}
+      {!searchQuery.trim() ? (
+        <div style={{
+          display: 'flex', gap: 8,
+          overflowX: isMobile ? 'auto' : 'visible',
+          flexWrap: isMobile ? 'nowrap' : 'wrap',
+          justifyContent: isMobile ? 'flex-start' : 'center',
+          marginBottom: isMobile ? 20 : 36,
+          paddingBottom: isMobile ? 4 : 0,
+          scrollbarWidth: 'none',
+          WebkitOverflowScrolling: 'touch',
+        }}>
+          {filterGroups.map(g => {
+            const count = g.key === 'all' ? allCourses.length : allCourses.filter(c=>c.group===g.key).length;
+            const active = activeGroup === g.key;
+            return (
+              <button key={g.key} onClick={() => setActiveGroup(g.key)} className="filter-btn" style={{
+                padding: isMobile ? '7px 14px' : '9px 20px',
+                borderRadius: 24, fontSize: isMobile ? '0.76rem' : '0.82rem',
+                fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0,
+                border: `1.5px solid ${active ? '#8b5cf6' : 'var(--border)'}`,
+                background: active ? 'linear-gradient(135deg,#7c3aed,#4f46e5)' : 'var(--glass)',
+                color: active ? '#fff' : 'var(--text-dim)', cursor: 'pointer', transition: 'all 0.22s',
+                boxShadow: active ? '0 4px 16px rgba(124,58,237,.4)' : 'none',
               }}>
-                {course.order}
+                {g.label}
+                <span style={{
+                  marginLeft: 5, fontSize: '0.6rem', borderRadius: 10, padding: '1px 6px',
+                  background: active ? 'rgba(255,255,255,.2)' : 'var(--glass2)',
+                }}>{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div style={{ textAlign: 'center', marginBottom: 20 }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            background: 'linear-gradient(135deg,rgba(139,92,246,.12),rgba(59,130,246,.12))',
+            border: '1px solid rgba(139,92,246,.25)', borderRadius: 24,
+            padding: '8px 22px', fontSize: '0.82rem', color: '#a78bfa', fontWeight: 600,
+          }}>
+            🔍 ผลการค้นหา <strong style={{ color: '#f1f5f9', fontSize: '1rem' }}>{filtered.length}</strong> คอร์ส
+          </span>
+        </div>
+      )}
+
+      {/* MOBILE: Grouped list */}
+      {isMobile && !searchQuery.trim() && groupedFiltered && activeGroup === 'all' ? (
+        <div>
+          {groupedFiltered.map(({ key, meta, courses }) => (
+            <div key={key} style={{ marginBottom: 28 }}>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4,
+                padding: '10px 14px', borderRadius: 12,
+                background: `${meta.color}10`, border: `1px solid ${meta.color}25`,
+              }}>
+                <div style={{ width: 4, height: 18, borderRadius: 2, background: meta.color }} />
+                <span style={{ fontSize: '0.88rem', fontWeight: 800, color: meta.color }}>{meta.label}</span>
+                <span style={{
+                  marginLeft: 'auto', fontSize: '0.65rem', padding: '2px 9px', borderRadius: 10,
+                  background: `${meta.color}18`, color: meta.color, fontWeight: 700,
+                }}>{courses.length} คอร์ส</span>
               </div>
-
-              {/* Progress Badge — DE101 only */}
-              {course.id === 'de101' && de101Progress > 0 && (
-                <div className="course-badge-progress">{de101Progress}% สำเร็จ</div>
-              )}
-
-              {/* Header */}
-              <div style={{ display: 'flex', gap: 12, marginBottom: 10, alignItems: 'flex-start', marginLeft: 16 }}>
-                <span style={{ fontSize: '2rem' }}>{course.emoji}</span>
-                <div style={{ flex: 1 }}>
-                  <h2 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: 2, lineHeight: 1.3 }}>
-                    {course.title}
-                  </h2>
-                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{course.subtitle}</p>
-                </div>
+              <div>
+                {courses.map(c => <MobileCourseRow key={c.id} c={c} />)}
               </div>
-
-              {/* Description */}
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-dim)', lineHeight: 1.6, marginBottom: 10 }}>
-                {course.desc}
-              </p>
-
-              {/* Meta */}
-              <div style={{ display: 'flex', gap: 12, marginBottom: 10, fontSize: '0.72rem', color: 'var(--text-muted)', flexWrap: 'wrap' }}>
-                <span>📖 {course.chapters} บท</span>
-                <span>⏱️ {course.duration}</span>
-                <span style={{ color: course.levelColor, fontWeight: 600 }}>
-                  ● {course.level}
-                </span>
-                <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                  📋 {course.prereq}
-                </span>
-              </div>
-
-              {/* Tags */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 12 }}>
-                {course.tags.map(tag => (
-                  <span key={tag} className="course-tag">{tag}</span>
-                ))}
-              </div>
-
-              {/* CTA */}
-              <Link href={course.link} className="course-cta active">
-                {course.id === 'de101' && de101Progress > 0 ? '📚 เรียนต่อ' : '🚀 เริ่มเรียนเลย'}
-              </Link>
             </div>
           ))}
         </div>
-
-        {/* Stats */}
-        <div style={{ textAlign: 'center', marginTop: 40, padding: 24, background: 'var(--glass)', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
-          <h3 style={{ fontSize: '1.1rem', marginBottom: 8 }}>📊 ภาพรวม</h3>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 32, fontSize: '0.85rem', flexWrap: 'wrap' }}>
-            <div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--blue)' }}>{courses.length}</div>
-              <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>คอร์สทั้งหมด</div>
+      ) : isMobile ? (
+        <div>
+          {filtered.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>
+              🔍 ไม่พบคอร์สที่ค้นหา
             </div>
-            <div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--green)' }}>{courses.reduce((a, c) => a + c.chapters, 0)}</div>
-              <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>บทเรียน</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--purple)' }}>{courses.filter(c => c.status === 'active').length}</div>
-              <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>เปิดแล้ว</div>
-            </div>
+          )}
+          {/* 2-column card grid on mobile */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: 12,
+          }}>
+            {filtered.map(c => <MobileCourseCard key={c.id} c={c} />)}
           </div>
+        </div>
+      ) : (
+        /* DESKTOP: Grid */
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))',
+          gap: 22,
+        }}>
+          {filtered.map(c => <DesktopCard key={c.id} c={c} />)}
+        </div>
+      )}
+
+      {/* Footer CTA */}
+      <div style={{
+        textAlign: 'center', marginTop: isMobile ? 40 : 60,
+        padding: isMobile ? '24px 16px' : '36px 24px',
+        background: 'linear-gradient(135deg,rgba(124,58,237,.1),rgba(59,130,246,.1))',
+        border: '1px solid rgba(139,92,246,.2)', borderRadius: 24,
+      }}>
+        <div style={{ fontSize: '2rem', marginBottom: 8 }}>🎓</div>
+        <h3 style={{ fontSize: isMobile ? '1.1rem' : '1.3rem', fontWeight: 800, marginBottom: 8 }}>ทุกคอร์สฟรี ไม่มีค่าใช้จ่าย</h3>
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', maxWidth: 420, margin: '0 auto 18px' }}>
+          เรียนได้ทุกที่ ไม่ต้องสมัคร บันทึก Progress อัตโนมัติ
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
+          {['✅ ฟรี 100%','📱 บนมือถือ','🔖 Progress ออโต้','♾️ ไม่หมดอายุ'].map(f => (
+            <span key={f} style={{
+              fontSize: '0.78rem', color: 'var(--text-dim)',
+              background: 'var(--glass)', border: '1px solid var(--border)',
+              borderRadius: 20, padding: '6px 14px',
+            }}>{f}</span>
+          ))}
         </div>
       </div>
     </div>

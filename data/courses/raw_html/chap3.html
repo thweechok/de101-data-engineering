@@ -1,0 +1,36 @@
+<h2>อะไรคือ The Box Model?</h2>
+<p><strong>The Box Model</strong> เป็นหัวใจสำคัญที่สุดในการเข้าใจการจัดวาง Layout ใน CSS แนวคิดคือ ทุกๆ องค์ประกอบ (Element) บนหน้าเว็บจะเป็น "กล่องสี่เหลี่ยม" แม้ว่าคุณจะเห็นมันเป็นข้อความหรือวงกลมก็ตาม กล่องนี้ประกอบด้วย 4 ส่วนจากด้านในออกไปด้านนอก:</p>
+
+<ol style="padding-left:20px">
+    <li><strong>Content:</strong> เนื้อหาหลักด้านในสุด (ข้อความ หรือ รูปภาพ) กำหนดขนาดได้ด้วย <code>width</code> และ <code>height</code></li>
+    <li><strong>Padding:</strong> พื้นที่ว่างระหว่าง Content กับ Border เปรียบเสมือนกันกระแทกด้านในกล่อง</li>
+    <li><strong>Border:</strong> เส้นขอบของกล่อง ล้อมรอบ Padding และ Content</li>
+    <li><strong>Margin:</strong> พื้นที่ว่างด้านนอกสุด ผลักกล่องนี้ให้ออกห่างจากกล่องข้างเคียง (Element อื่นๆ)</li>
+</ol>
+
+<h2>ปัญหาคลาสสิกของ Box Model (The Box Model Problem)</h2>
+<p>ตามค่าเริ่มต้นของเบราว์เซอร์ เมื่อคุณกำหนด <code>width: 100px;</code> มันคือกำหนดให้ <strong>Content</strong> กว้าง 100px เท่านั้น ถ้าคุณเพิ่ม <code>padding: 20px;</code> และ <code>border: 5px;</code> เข้าไป ความกว้างรวมของกล่องจะกลายเป็น: 100 + 20(ซ้าย) + 20(ขวา) + 5(ซ้าย) + 5(ขวา) = <strong>150px!</strong></p>
+<p>ปัญหานี้ทำให้การจัด Layout พังได้ง่ายมาก เพราะขนาดกล่องบวมเกินกว่าที่คุณกำหนดไว้ วิธีแก้ปัญหาที่ดีที่สุดและกลายเป็นมาตรฐานของโลกไปแล้วคือการใช้ <code>box-sizing: border-box;</code></p>
+
+<pre>* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}</pre>
+<p>เมื่อใช้ <code>border-box</code> กล่องที่กำหนด <code>width: 100px;</code> จะรวมเอา Padding และ Border ไว้ใน 100px นั้นเลย เนื้อหาด้านในจะถูกบีบให้เล็กลงแทน ทำให้กล่องไม่บวมเกินขนาดที่เราตั้งใจไว้</p>
+
+<h2>Display Property: พฤติกรรมของกล่อง</h2>
+<p>กล่องแต่ละประเภทมีพฤติกรรมการแสดงผลเริ่มต้นไม่เหมือนกัน ซึ่งควบคุมด้วย property <code>display</code>:</p>
+<ul>
+    <li><strong>Block (<code>display: block;</code>):</strong> เช่น <code>&lt;div&gt;</code>, <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code> จะจองพื้นที่เต็มความกว้าง (100%) เสมอ และบังคับให้ Element ถัดไปขึ้นบรรทัดใหม่ กำหนด width และ height ได้</li>
+    <li><strong>Inline (<code>display: inline;</code>):</strong> เช่น <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;strong&gt;</code> จะใช้พื้นที่กว้างเท่าที่จำเป็นตามเนื้อหาด้านใน <strong>ไม่สามารถ</strong> กำหนด width, height, หรือ margin-top/bottom ได้</li>
+    <li><strong>Inline-block (<code>display: inline-block;</code>):</strong> ลูกครึ่งระหว่าง block และ inline เรียงต่อกันในบรรทัดเดียวได้ (เหมือน inline) แต่สามารถกำหนด width, height และ margin ได้ (เหมือน block) เช่น <code>&lt;button&gt;</code></li>
+    <li><strong>None (<code>display: none;</code>):</strong> ลบ Element นั้นออกจากหน้าเว็บไปเลย (กล่องหายไป และไม่กินพื้นที่ใดๆ)</li>
+</ul>
+
+<h2>Margin Collapse: พฤติกรรมแปลกๆ ที่ต้องรู้</h2>
+<p>เรื่องที่ทำให้มือใหม่ปวดหัวบ่อยๆ คือ <strong>Margin Collapse</strong> (การยุบรวมกันของ Margin) เมื่อคุณมี Element 2 ตัววางซ้อนกัน (บน-ล่าง) ตัวบนมี <code>margin-bottom: 30px;</code> และตัวล่างมี <code>margin-top: 20px;</code> ระยะห่างตรงกลางระหว่างสองกล่องนี้จะ <strong>ไม่ใช่ 50px</strong> แต่จะเป็นแค่ <strong>30px</strong> (เบราว์เซอร์จะเลือกค่า Margin ที่ใหญ่ที่สุดมาใช้ และจับยุบรวมกัน) หมายเหตุ: เหตุการณ์นี้เกิดขึ้นเฉพาะ Top และ Bottom เท่านั้น ไม่เกิดกับ Left และ Right</p>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> เทคนิคการจัดกึ่งกลาง Element กลางหน้าจอแบบรวดเร็วที่สุดสำหรับ Block element ที่ระบุความกว้างแล้ว คือการใช้ <code>margin: 0 auto;</code> (Top/Bottom เป็น 0, Left/Right เป็น auto ซึ่งจะแบ่งพื้นที่ที่เหลือสองฝั่งให้เท่ากัน)
+</div>

@@ -1,0 +1,46 @@
+<h2>อะไรคือ CSS?</h2>
+<p>CSS ย่อมาจาก <strong>Cascading Style Sheets</strong> เป็นภาษาที่ใช้ในการกำหนดรูปแบบการแสดงผลของ HTML ไม่ว่าจะเป็น สี ขนาด เลย์เอาต์ หรือแม้กระทั่งแอนิเมชัน คำว่า "Cascading" หมายถึงการไหลตกทอดของสไตล์จากระดับบนสู่ระดับล่าง (ลำดับความสำคัญ)</p>
+
+<h2>การเชื่อมต่อ CSS กับ HTML (How to add CSS)</h2>
+<p>มี 3 วิธีหลักในการใส่ CSS แต่ในระดับมืออาชีพ เราจะใช้ External CSS เป็นหลัก:</p>
+<ul>
+    <li><strong>Inline CSS:</strong> ใส่สไตล์ตรงๆ ใน tag HTML ผ่าน attribute <code>style="..."</code> (ไม่แนะนำเพราะโค้ดจะรก)</li>
+    <li><strong>Internal CSS:</strong> เขียนโค้ด CSS ไว้ในแท็ก <code>&lt;style&gt;</code> ภายใน <code>&lt;head&gt;</code> ของ HTML</li>
+    <li><strong>External CSS:</strong> เขียน CSS แยกไฟล์ (เช่น style.css) แล้วเชื่อมด้วย <code>&lt;link rel="stylesheet" href="style.css"&gt;</code> (แนะนำที่สุด โค้ดสะอาด นำไปใช้ซ้ำได้)</li>
+</ul>
+
+<h2>Selectors: การเลือกองค์ประกอบ (Targeting Elements)</h2>
+<p>เพื่อให้ CSS รู้ว่าเราต้องการปรับแต่งส่วนไหน เราต้องใช้ <strong>Selectors</strong> ที่ถูกต้อง:</p>
+<ol style="padding-left:20px">
+    <li><strong>Element Selector:</strong> เลือกตามชื่อ tag เช่น <code>p { color: red; }</code> จะทำให้ทุกย่อหน้าเป็นสีแดง</li>
+    <li><strong>Class Selector (ใช้บ่อยสุด):</strong> เลือกตาม attribute class นำหน้าด้วยจุด (dot) เช่น <code>.btn { border-radius: 5px; }</code> (ใช้ซ้ำได้หลายที่)</li>
+    <li><strong>ID Selector:</strong> เลือกตาม attribute id นำหน้าด้วยสี่เหลี่ยม (#) เช่น <code>#header { background: black; }</code> (1 หน้าควรมี id นั้นแค่ตัวเดียว)</li>
+    <li><strong>Attribute Selector:</strong> เลือกจากคุณสมบัติ เช่น <code>input[type="text"] { width: 100%; }</code></li>
+</ol>
+
+<h2>Specificity: กฎความสำคัญของ CSS</h2>
+<p>เมื่อมีสไตล์ซ้ำซ้อนกันชี้ไปที่องค์ประกอบเดียวกัน CSS จะตัดสินใจเลือกสไตล์ที่มี <strong>Specificity Score</strong> สูงกว่ามาใช้งาน กฎพื้นฐานคือ: <code>Inline Style &gt; ID &gt; Class &gt; Element</code></p>
+<p>หากคะแนนเท่ากัน CSS จะเลือกกฏที่ <strong>เขียนไว้ล่างสุด (ลำดับหลังสุด)</strong> มาใช้ ตัวอย่างเช่น ถ้าคุณมี <code>.title { color: blue; }</code> และ <code>.title { color: red; }</code> ข้อความจะกลายเป็นสีแดง</p>
+
+<h2>Colors และ Typography (สีและตัวอักษร)</h2>
+<p>การจัดการสีใน CSS สามารถทำได้หลายรูปแบบ:</p>
+<ul>
+    <li><strong>Keyword:</strong> เช่น <code>red</code>, <code>blue</code>, <code>transparent</code></li>
+    <li><strong>HEX:</strong> รหัสฐาน 16 เช่น <code>#FF0000</code>, <code>#000000</code></li>
+    <li><strong>RGB / RGBA:</strong> เช่น <code>rgb(255, 0, 0)</code> และ rgba เพิ่ม alpha channel สำหรับความโปร่งใส <code>rgba(0, 0, 0, 0.5)</code> (โปร่งใส 50%)</li>
+    <li><strong>HSL / HSLA:</strong> กำหนดจาก Hue, Saturation, Lightness</li>
+</ul>
+
+<p>สำหรับ Typography (ตัวอักษร) Properties ที่สำคัญคือ:</p>
+<pre>body {
+    font-family: 'Inter', sans-serif; /* ฟอนต์หลักและฟอนต์สำรอง */
+    font-size: 16px; /* ขนาดตัวอักษร */
+    font-weight: 700; /* ความหนา (400=normal, 700=bold) */
+    line-height: 1.5; /* ระยะห่างระหว่างบรรทัด */
+    color: #333333; /* สีตัวอักษร */
+    text-align: center; /* การจัดตำแหน่ง */
+}</pre>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> อย่าใช้ <code>!important</code> ใน CSS หากไม่จำเป็นจริงๆ เพราะมันจะทำลายระบบ Specificity และทำให้โค้ดของคุณพัง แก้ไข (Debug) ยากมากในอนาคต! ให้แก้ปัญหาโดยจัดลำดับความสำคัญของ Class ให้ถูกต้องแทน
+</div>

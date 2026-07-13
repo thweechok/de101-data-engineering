@@ -1,0 +1,48 @@
+<h2>ทำไมต้อง Responsive Design?</h2>
+<p>ในปัจจุบัน ผู้คนเข้าถึงเว็บไซต์ผ่านอุปกรณ์ที่หลากหลายมาก ตั้งแต่มือถือจอเล็ก 4 นิ้ว แท็บเล็ต ไปจนถึงจอมอนิเตอร์ Ultrawide ขนาด 34 นิ้ว <strong>Responsive Web Design (RWD)</strong> คือแนวคิดในการออกแบบและพัฒนาเว็บไซต์ให้สามารถ <strong>ปรับตัว</strong> และแสดงผลได้อย่างสวยงาม ใช้งานได้จริงบนทุกขนาดหน้าจอ โดยใช้ HTML และ CSS ชุดเดียวกัน</p>
+
+<h2>หัวใจหลัก: The Viewport Meta Tag</h2>
+<p>สิ่งแรกที่ต้องทำเสมอคือการบอกเบราว์เซอร์บนมือถือว่า "อย่าพยายามซูมหน้าเว็บออกเหมือนเป็นเว็บเวอร์ชัน Desktop นะ" โดยใส่ tag นี้ไว้ใน <code>&lt;head&gt;</code> ของ HTML:</p>
+<pre>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</pre>
+<p>นี่คือคำสั่งที่บอกว่า ให้ปรับความกว้างของหน้าเว็บ (Viewport) เท่ากับความกว้างจริงของอุปกรณ์ (Device Width) และเริ่มซูมที่ 100% (1.0)</p>
+
+<h2>อาวุธสำคัญ: Media Queries</h2>
+<p><strong>Media Query</strong> (<code>@media</code>) คือคำสั่ง CSS ที่ทำหน้าที่เป็น <strong>เงื่อนไข (If-statement)</strong> มันช่วยให้คุณสามารถใช้งานบล็อก CSS เฉพาะเมื่อเงื่อนไขขนาดหน้าจอเป็นจริง ตัวอย่างเช่น:</p>
+<pre>/* สไตล์เริ่มต้น (มักใช้สำหรับมือถือ) */
+.container {
+    width: 100%;
+    flex-direction: column;
+}
+
+/* เมื่อหน้าจอกว้าง 768px ขึ้นไป (Tablet/Desktop) */
+@media (min-width: 768px) {
+    .container {
+        width: 80%;
+        flex-direction: row; /* เปลี่ยนเป็นแนวนอนเมื่อจอใหญ่พอ */
+    }
+}</pre>
+
+<h2>แนวคิด Mobile-First Approach</h2>
+<p>การเขียน CSS ที่ดีและได้รับความนิยมในปัจจุบันคือการใช้แนวคิด <strong>Mobile-First</strong> (ออกแบบเพื่อมือถือก่อน) ซึ่งหมายความว่า:</p>
+<ol style="padding-left:20px">
+    <li>เขียน CSS นอก Media Query ให้เป็นเลย์เอาต์สำหรับโทรศัพท์มือถือ (ซึ่งมักจะเป็นแบบ 1 คอลัมน์, เรียงซ้อนกัน)</li>
+    <li>ใช้ <code>@media (min-width: ...)</code> เพื่อค่อยๆ ปรับเลย์เอาต์ให้ซับซ้อนขึ้นเมื่อหน้าจอใหญ่ขึ้น</li>
+</ol>
+<p>แนวคิดนี้ทำให้โค้ด CSS ของคุณสั้นลง, อ่านง่ายขึ้น, และเบราว์เซอร์บนมือถือทำงานได้เร็วขึ้น เพราะไม่ต้องโหลดโค้ด Desktop ที่ซับซ้อนแล้วมานั่งเขียนทับ (Override) ทีหลัง</p>
+
+<h2>หน่วยวัดที่ยืดหยุ่น (Relative Units)</h2>
+<p>การใช้หน่วยพิกเซล (<code>px</code>) ทำให้ขนาดคงที่ (Absolute) ซึ่งไม่ดีต่อ Responsive เราควรใช้หน่วยสัมพัทธ์ (Relative Units) มากขึ้น:</p>
+<ul>
+    <li><strong>% (Percentage):</strong> อ้างอิงจากขนาดของกล่องแม่ (Parent) เช่น <code>width: 50%</code></li>
+    <li><strong>vw และ vh (Viewport Width / Height):</strong> อ้างอิงจากขนาดจอผู้ใช้ <code>100vw</code> คือความกว้างจอ 100%, <code>100vh</code> คือความสูงจอเต็มจอพอดี (มีประโยชน์มากเวลาทำหน้า Hero Section)</li>
+    <li><strong>em และ rem:</strong> สำหรับ Typography และ Spacing
+        <ul>
+            <li><code>em</code>: อ้างอิงจาก font-size ของกล่องแม่</li>
+            <li><code>rem</code> (Root em): อ้างอิงจาก font-size ของ Root (แท็ก <code>&lt;html&gt;</code> ซึ่งค่าปกติคือ 16px) แนะนำให้ใช้ rem เป็นหลักเพื่อป้องกันปัญหาขนาดฟอนต์ทบต้นจนเพี้ยน</li>
+        </ul>
+    </li>
+</ul>
+
+<div class="tip-box">
+    <strong>💡 Fluid Typography:</strong> หากต้องการให้ตัวอักษรย่อ/ขยายตามขนาดหน้าจอแบบสมูทๆ แทนที่จะกระโดดตาม Breakpoints ลองใช้ฟังก์ชัน <code>clamp()</code> เช่น <code>font-size: clamp(1rem, 2vw + 1rem, 2.5rem);</code> มันจะตั้งค่าต่ำสุด, ค่าอ้างอิงหน้าจอ, และค่าสูงสุดได้อย่างน่าทึ่ง!
+</div>

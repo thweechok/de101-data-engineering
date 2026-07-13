@@ -1,0 +1,42 @@
+<h2>ศาสตร์แห่งการจัดวาง: Positioning ใน CSS</h2>
+<p>ตามปกติแล้ว เบราว์เซอร์จะจัดเรียงเนื้อหาจากบนลงล่าง ซ้ายไปขวา นี่เรียกว่า <strong>Normal Document Flow</strong> แต่บางครั้งเราต้องการบังคับให้ Element ไปอยู่ตำแหน่งเฉพาะ เช่น แถบเมนูด้านบนที่เลื่อนตามลงมา หรือปุ่มแชทมุมขวาล่าง นั่นคือหน้าที่ของ property ที่ชื่อ <code>position</code></p>
+
+<h2>ค่าต่างๆ ของ Position</h2>
+<ol style="padding-left:20px">
+    <li><strong>Static (ค่าเริ่มต้น):</strong> กล่องวางเรียงตาม Normal Flow ปกติ ไม่สามารถใช้คำสั่ง <code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code> หรือ <code>z-index</code> เพื่อขยับมันได้</li>
+    
+    <li><strong>Relative:</strong> ยังคงอยู่ใน Normal Flow เหมือน static แต่คุณสามารถใช้ <code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code> เพื่อ <strong>"ขยับมันออกจากตำแหน่งเดิม"</strong> ได้ (โดยพื้นที่เดิมของมันจะยังคงถูกจองเอาไว้ ไม่หายไปไหน) มักใช้สำหรับทำเป็น "จุดอ้างอิง" (Container) ให้กับ Absolute position</li>
+    
+    <li><strong>Absolute:</strong> หลุดออกจาก Normal Flow โดยสิ้นเชิง (Element อื่นจะขยับขึ้นมาแทนที่พื้นที่ของมัน) มันจะอ้างอิงตำแหน่งและจัดวางตัวเองเทียบกับ <strong>"บรรพบุรุษที่ใกล้ที่สุดที่มี position ไม่ใช่ static"</strong> (ถ้าหาไม่เจอ จะอ้างอิงกับ <code>&lt;html&gt;</code> หรือ Viewport แทน)</li>
+    
+    <li><strong>Fixed:</strong> คล้ายกับ Absolute คือหลุดจาก Flow แต่จะอ้างอิงตำแหน่งกับ <strong>Viewport (หน้าต่างเบราว์เซอร์)</strong> เสมอ ไม่ว่าคุณจะ Scroll หน้าเว็บลงไปแค่ไหน มันก็จะยังคงติดอยู่ที่ตำแหน่งเดิมบนหน้าจอ (เช่น Navigation bar แบบติดหนึบ)</li>
+    
+    <li><strong>Sticky:</strong> ลูกผสมระหว่าง Relative และ Fixed ในตอนแรกมันจะประพฤติตัวเหมือน Relative ไปเรื่อยๆ จนกระทั่งคุณ Scroll หน้าจอมาถึงจุดที่กำหนด (เช่น <code>top: 0;</code>) มันจะกลายร่างเป็น Fixed และติดหนึบอยู่ตรงนั้นจนกว่ากล่องแม่ของมัน (Container) จะถูก Scroll ผ่านไป</li>
+</ol>
+
+<h2>ตัวอย่างการใช้งาน Relative + Absolute</h2>
+<p>เทคนิคที่ใช้บ่อยที่สุดในการวางซ้อนองค์ประกอบ (เช่น การทำปุ่ม "X" ปิดรูปที่มุมขวาบนของรูปภาพ) คือการเซ็ตกล่องครอบ (Parent) เป็น Relative และเซ็ตของข้างใน (Child) เป็น Absolute</p>
+<pre>.card-container {
+    position: relative; /* เป็นจุดอ้างอิง */
+    width: 300px;
+    height: 400px;
+    background: #eee;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;    /* ห่างจากขอบบนของ .card-container 10px */
+    right: 10px;  /* ห่างจากขอบขวาของ .card-container 10px */
+}</pre>
+
+<h2>Z-Index และ Stacking Context (ลำดับการซ้อนทับ)</h2>
+<p>เมื่อเราใช้ Position ขยับ Element ออกจาก Flow มักจะเกิดการ "ซ้อนทับกัน" (Overlapping) เราสามารถควบคุมได้ว่าใครจะอยู่บน ใครจะอยู่ล่าง ด้วย <strong>z-index</strong></p>
+<ul>
+    <li>ค่า <code>z-index</code> เป็นตัวเลข (เช่น -1, 0, 1, 10, 9999) ยิ่งค่ามาก ยิ่งอยู่ด้านบน</li>
+    <li><strong>ข้อควรระวัง:</strong> <code>z-index</code> จะทำงานก็ต่อเมื่อ Element นั้นมี <code>position</code> ที่ <strong>ไม่ใช่ static</strong> (เช่น relative, absolute, fixed, sticky) เท่านั้น!</li>
+    <li><strong>Stacking Context:</strong> <code>z-index</code> จะเปรียบเทียบกันภายในบริบทเดียวกัน (กล่องแม่เดียวกัน) ถ้ากล่องแม่มี z-index ต่ำ ต่อให้ลูกมี z-index เป็นแสน ก็ไม่สามารถทะลุขึ้นไปอยู่เหนือกล่องอื่นที่มี z-index สูงกว่าได้</li>
+</ul>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> อย่าสร้างปัญหา "Z-index War" (การใส่ z-index: 99999 มั่วไปหมดเพื่อแก้ปัญหาเฉพาะหน้า) ให้วางแผน Stacking Context ตั้งแต่ต้น ตัวอย่างระบบสเกลที่ดี: Modal=1000, Dropdown=500, Sticky Header=100, Base=1 เป็นต้น
+</div>
